@@ -1,39 +1,5 @@
-# Fakta
+% Fakta
 mapsize(25,25).
-
-# Right Border
-draw_point(X, Y) :- mapsize(W, H),
-					X =:= W + 1,
-					Y =< H + 1,
-					write('X '), nl,
-					NewY is Y+1,
-					draw_point(0, NewY).
-		
-# Left Border		
-draw_point(X, Y) :- mapsize(_, H),
-					X =:= 0,
-					Y =< H+1,
-					write('X '),
-					NewX is X+1,
-					draw_point(NewX, Y).
-				
-# Top Border				
-draw_point(X, Y) :- mapsize(W, _),
-					X < W + 1,
-					X > 0,
-					Y =:= 0,
-					write('X '),
-					NewX is X+1,
-					draw_point(NewX, Y).
-					
-# Bottom Border				
-draw_point(X, Y) :- mapsize(W, H),
-					X < W + 1,
-					X > 0,
-					Y =:= H + 1,
-					write('X '),
-					NewX is X+1,
-					draw_point(NewX, Y).
 
 barrier(1,5).
 barrier(1,14).
@@ -162,32 +128,32 @@ barrier(22,19).
 barrier(22,20).
 barrier(22,21).
 
-shop(8,2).
-shop(10,2).
-shop(19,13).
+shop(7,1).
+shop(9,1).
+shop(18,12).
 
-guild(2,7).
-guild(10,7).
-guild(22,2).
+guild(1,6).
+guild(9,6).
+guild(21,1).
 
-home(2,5).
-home(15,2).
-home(17,2).
+home(1,4).
+home(14,1).
+home(16,1).
 
-wolf_zone(2).
-wolf_zone(3).
-wolf_zone(4).
-wolf_zone(5).
-wolf_zone(6).
-wolf_zone(7).
-wolf_zone(8).
+slime_zone(2).
+slime_zone(3).
+slime_zone(4).
+slime_zone(5).
+slime_zone(6).
+slime_zone(7).
+slime_zone(8).
 
-slime_zone(10).
-slime_zone(11).
-slime_zone(12).
-slime_zone(13).
-slime_zone(14).
-slime_zone(15).
+wolf_zone(10).
+wolf_zone(11).
+wolf_zone(12).
+wolf_zone(13).
+wolf_zone(14).
+wolf_zone(15).
 
 goblin_zone(17).
 goblin_zone(18).
@@ -198,17 +164,125 @@ goblin_zone(22).
 
 danger_zone(24).
 
-map :-
+boss(23,1).
 
-w :-
+% Top Fence
+drawfence(I,J) :- 
+	mapsize(_,A),
+	I = 0,
+	J > 0,
+	J < A-1,
+	write('X '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
 
-a :-
+% Left Fence
+drawfence(I,J) :-
+	mapsize(A,_),
+	J = 0,
+	I < A,
+	write('X '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
 
-s :-
+% Right Fence
+drawfence(I,J) :-
+	mapsize(A,B),
+	J > B-2,
+	I < A,
+	write('X'),
+	nl,
+	NewI is I+1,
+	drawfence(NewI, 0).
+	
+% Bottom Fence
+drawfence(I,J) :-
+	I > 23,
+	J > 0,
+	J < 24,
+	write('X '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
 
-d :-
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	\+ shop(I,J),
+	\+ home(I,J),
+	\+ guild(I,J),
+	\+ barrier(I,J),
+	\+ boss(I,J),
+	write('_ '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
 
-interact :-
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	shop(I,J),
+	write('S '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
 
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	home(I,J),
+	write('H '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
 
-draw_map :-
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	guild(I,J),
+	write('Q '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	barrier(I,J),
+	write('X '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	boss(I,J),
+	write('B '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+drawmap :-
+	drawfence(0,0).
+
+% w :-
+
+% a :-
+
+% s :-
+
+% d :-
+
+% interact :-
