@@ -1,2 +1,1 @@
-start :-
-    ['map.pl'].
+:- include('start.pl').

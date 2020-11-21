@@ -27,3 +27,25 @@ exp_required(17,100).
 exp_required(18,100).
 
 level_up :-
+    player_level(CurrentLevel), !,
+    player_exp(CurrentExp), !,
+    exp_required(CurrentLevel, ExpRequired), !,
+    CurrentExp >= ExpRequired,
+    retractall(player_level(_)),
+    NewLevel is CurrentLevel + 1,
+    assertz(player_level(NewLevel)),
+    retractall(player_exp(_)),
+    NewPlayerExp is CurrentExp - ExpRequired,
+    assertz(player_exp(NewPlayerExp)),
+    player_max_health(CurrentMaxHealth),
+    retractall(player_max_health(_)),
+    NewPlayerMaxHealth is NewLevel * 100,
+    assertz(player_max_health(NewPlayerMaxHealth)),
+    player_current_health(CurrentHealth),
+    retractall(player_current_health(_)),
+    NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
+    assertz(player_current_health(NewPlayerCurrentHealth)),
+    retractall(enemy_level(_)),
+    assertz(enemy_level(NewLevel)),
+    write('Congratulation you ascend to Level '), write(NewLevel),nl.
+    
