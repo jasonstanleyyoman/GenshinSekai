@@ -26,4 +26,6 @@ exp_required(16,100).
 exp_required(17,100).
 exp_required(18,100).
 
-level_up :-
+player_level(30).
+
+%level_up :-
