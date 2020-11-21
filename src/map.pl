@@ -1,3 +1,5 @@
+
+
 % Fakta
 mapsize(25,25).
 
