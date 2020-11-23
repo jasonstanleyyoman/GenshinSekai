@@ -45,7 +45,6 @@ level_up :-
     retractall(player_current_health(_)),
     NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
     assertz(player_current_health(NewPlayerCurrentHealth)),
-    retractall(enemy_level(_)),
-    assertz(enemy_level(NewLevel)),
+    set_enemy_level,
     write('Congratulation you ascend to Level '), write(NewLevel),nl.
     

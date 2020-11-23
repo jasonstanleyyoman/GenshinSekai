@@ -1,5 +1,8 @@
+:- dynamic(playerposition/2).
+
 % Fakta
 mapsize(25,25).
+playerposition(1,1).
 
 barrier(1,5).
 barrier(1,14).
@@ -215,6 +218,7 @@ drawfence(I,J) :-
 	\+ guild(I,J),
 	\+ barrier(I,J),
 	\+ boss(I,J),
+	\+ playerposition(I,J),
 	write('_ '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -274,15 +278,67 @@ drawfence(I,J) :-
 	NewJ is J+1,
 	drawfence(I, NewJ).
 
+% Draw Inside
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	playerposition(I,J),
+	write('P '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
 drawmap :-
 	drawfence(0,0).
 
-% w :-
+w :-
+	playerposition(I,J),
+	NewI is I-1,
+	NewI =\= 0,
+	\+ shop(NewI,J),
+	\+ home(NewI,J),
+	\+ guild(NewI,J),
+	\+ barrier(NewI,J),
+	\+ boss(NewI,J),
+	retract(playerposition(I,J)),
+	assertz(playerposition(NewI,J)).
 
-% a :-
+a :-
+	playerposition(I,J),
+	NewJ is J-1,
+	NewJ =\= 0,
+	\+ shop(I,NewJ),
+	\+ home(I,NewJ),
+	\+ guild(I,NewJ),
+	\+ barrier(I,NewJ),
+	\+ boss(I,NewJ),
+	retract(playerposition(I,J)),
+	assertz(playerposition(I,NewJ)).
 
-% s :-
+s :-
+	playerposition(I,J),
+	NewI is I+1,
+	NewI =\= 24,
+	\+ shop(NewI,J),
+	\+ home(NewI,J),
+	\+ guild(NewI,J),
+	\+ barrier(NewI,J),
+	\+ boss(NewI,J),
+	retract(playerposition(I,J)),
+	assertz(playerposition(NewI,J)).
 
-% d :-
+
+d :-
+	playerposition(I,J),
+	NewJ is J+1,
+	NewJ =\= 24,
+	\+ shop(I,NewJ),
+	\+ home(I,NewJ),
+	\+ guild(I,NewJ),
+	\+ barrier(I,NewJ),
+	\+ boss(I,NewJ),
+	retract(playerposition(I,J)),
+	assertz(playerposition(I,NewJ)).
 
 % interact :-
