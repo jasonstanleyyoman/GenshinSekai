@@ -13,9 +13,9 @@ enemy(3, 'Goblin').
 :- dynamic(enemy_attack/1).
 :- dynamic(enemy_defense/1).
 
-max_health_multiplier(1,100).
-max_health_multiplier(2,110).
-max_health_multiplier(3,120).
+max_health_multiplier(1,20).
+max_health_multiplier(2,30).
+max_health_multiplier(3,50).
 
 attack_multiplier(1,1).
 attack_multiplier(2,1.3).
@@ -27,17 +27,22 @@ defense_multiplier(3,1.2).
 
 %Rules
 %exp_gained, depends on enemy type(different multipliers)
-exp_gained(X) :-    enemy_id(slime),
-                    enemy_level(Y),
-                    X is 1.1*Y.
 
-exp_gained(X) :-    enemy_id(wolf),
-                    enemy_level(Y),
-                    X is 1.3*Y.
-
-exp_gained(X) :-    enemy_id(goblin),
-                    enemy_level(Y),
-                    X is 1.5*Y.
+exp_gained(X) :- 
+    enemy_id(ID),
+    ID =:= 1,
+    enemy_level(Y),
+    X is 2*Y.
+exp_gained(X) :- 
+    enemy_id(ID),
+    ID =:= 2,
+    enemy_level(Y),
+    X is 4*Y.
+exp_gained(X) :- 
+    enemy_id(ID),
+    ID =:= 3,
+    enemy_level(Y),
+    X is 6*Y.
 
 %is_defeated mengecek apakah enemy berhasil dikalahkan
 is_defeated :- enemy_current_health(X),
