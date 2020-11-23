@@ -15,7 +15,7 @@ start :-
     assert(player_level(1)),
     assert(player_current_health(30)),
     assert(player_max_health(100)),
-    assert(player_attack(20)),
+    assert(player_attack(200)),
     assert(player_defense(5)),
     assert(player_gold(1)),
 
@@ -24,6 +24,8 @@ start :-
 
     assert(enemy_level(1)),
     ['map.pl'],
+    ['battle.pl'],
+    ['help.pl'],
     
     write('░██████╗░███████╗███╗░░██╗░██████╗██╗░░██╗██╗███╗░░██╗  ░██████╗███████╗██╗░░██╗░█████╗░██╗'),nl,
     write('██╔════╝░██╔════╝████╗░██║██╔════╝██║░░██║██║████╗░██║  ██╔════╝██╔════╝██║░██╔╝██╔══██╗██║'),nl,
