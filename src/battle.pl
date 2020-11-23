@@ -83,7 +83,6 @@ special_attack:-
     write('Will available again in '), write(Cooldown), write(' turn.'),nl.
 
 enemy_attack :-
-    
     enemy_id(ID),
     enemy(ID, EnemyName),
     enemy_attack(EnemyAttack),
