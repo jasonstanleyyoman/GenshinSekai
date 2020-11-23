@@ -27,24 +27,29 @@ defense_multiplier(3,1.2).
 
 %Rules
 %exp_gained, depends on enemy type(different multipliers)
-exp_gained(X) :-    enemy_id(slime),
-                    enemy_level(Y),
-                    X is 1.1*Y.
+exp_gained(ExpGained) :-    
+                            enemy_id(slime),
+                            enemy_level(EnemyLevel),
+                            ExpGained is 1.1*EnemyLevel.
 
-exp_gained(X) :-    enemy_id(wolf),
-                    enemy_level(Y),
-                    X is 1.3*Y.
+exp_gained(ExpGained) :-    
+                            enemy_id(wolf),
+                            enemy_level(EnemyLevel),
+                            ExpGained is 1.3*EnemyLevel.
 
-exp_gained(X) :-    enemy_id(goblin),
-                    enemy_level(Y),
-                    X is 1.5*Y.
+exp_gained(ExpGained) :-    
+                            enemy_id(goblin),
+                            enemy_level(EnemyLevel),
+                            ExpGained is 1.5*EnemyLevel.
 
 %is_defeated mengecek apakah enemy berhasil dikalahkan
-is_defeated :- enemy_current_health(X),
+is_defeated :- 
+                enemy_current_health(X),
                 X =< 0.
 
 %set_enemy_level menetapkan level enemy sesuai level player
-set_enemy_level :-  retractall(enemy_level(_)),
+set_enemy_level :-  
+                    retractall(enemy_level(_)),
                     player_level(X),
                     asserta(enemy_level(X)).
 
