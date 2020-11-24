@@ -36,13 +36,13 @@ inventory :-
 % Job ID :  1 - Swordsman
 %           2 - Archer
 %           3 - Sorcerer
-% Details : NAME, JOB ID, HEALTH, ATTACK, DEFENSE
-:- dynamic(weapon/5).
-:- dynamic(armor/5).
-:- dynamic(accessory/5).
-weapon('Wooden Sword', 1, 0, 0, 0).
-armor('Iron Armor', 1, 0, 0, 0).
-accessory('Wood Talisman', 1, 0, 0, 0).
+% Details : ITEM ID, NAME, JOB ID, HEALTH, ATTACK, DEFENSE
+:- dynamic(weapon/6).
+:- dynamic(armor/6).
+:- dynamic(accessory/6).
+weapon(0, 'Wooden Sword', 1, 0, 0, 0).
+armor(0, 'Iron Armor', 1, 0, 0, 0).
+accessory(0, 'Wood Talisman', 1, 0, 0, 0).
 
 /* -----[ POTIONS ] ----- */
 % ----- List -----
