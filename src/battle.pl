@@ -23,7 +23,6 @@ start_battle(ID) :-
     Health is EnemyLevel * HealthMult,
     Attack is (2 * EnemyLevel) + (EnemyLevel * AttackMult),
     Defense is (1.5 * EnemyLevel) + (EnemyLevel * DefenseMult),
-    retractall(is_battle),
     assertz(enemy_id(ID)),
     assertz(is_battle),
     assertz(enemy_current_health(Health)),

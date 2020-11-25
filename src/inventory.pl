@@ -14,7 +14,7 @@ update_equip_count :-
     potion_count(3, C),
     Y is 3+A+B+C,
 
-    retract(equipment_count(N)),
+    retract(equipment_count(_)),
     assertz(equipment_count(Y)).
 
 % ----- Print Inventory -----
@@ -79,7 +79,7 @@ print_potion :-
     print_potion(Count, PotName),
     PotionID = 3.
 
-print_potion(0, PotName):- !.
+print_potion(0, _):- !.
 print_potion(Count, PotName) :-
     write(Count), write(' '), write(PotName), nl.
     

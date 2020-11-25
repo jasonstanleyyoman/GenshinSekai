@@ -27,8 +27,10 @@ start :-
     ['battle.pl'],
     ['inventory.pl'],
     retractall(special_attack_available),
+    retractall(is_battle),
     ['help.pl'],
-    ['status.pl'].
+    ['status.pl'],
+    ['map.pl'].
     /*
     write('░██████╗░███████╗███╗░░██╗░██████╗██╗░░██╗██╗███╗░░██╗  ░██████╗███████╗██╗░░██╗░█████╗░██╗'),nl,
     write('██╔════╝░██╔════╝████╗░██║██╔════╝██║░░██║██║████╗░██║  ██╔════╝██╔════╝██║░██╔╝██╔══██╗██║'),nl,

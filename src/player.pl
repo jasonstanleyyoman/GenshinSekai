@@ -8,6 +8,8 @@
 :- dynamic(player_gold/1).
 :- dynamic(player_job/1).
 
+player_location(1,1).
+
 exp_required(1,100).
 exp_required(2,100).
 exp_required(3,100).
