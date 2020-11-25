@@ -228,7 +228,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
+	\+ player_location(I,J),
 	shop(I,J),
 	player_location(I,J),
 	write('P '),
@@ -252,7 +252,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
+	\+ player_location(I,J),
 	home(I,J),
 	player_location(I,J),
 	write('P '),
@@ -276,7 +276,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
+	\+ player_location(I,J),
 	guild(I,J),
 	player_location(I,J),
 	write('P '),
@@ -311,7 +311,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
+	\+ player_location(I,J),
 	boss(I,J),
 	write('B '),
 	NewJ is J+1,
@@ -418,7 +418,7 @@ ecounter_enemy :-
 	check_ecounter(EcounterChance, I).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < -1, !,
 	slime_zone(I),
 	start_battle(1).
 
@@ -434,6 +434,20 @@ check_ecounter(Chance, I) :-
 
 check_ecounter(_, _) :-
 	write('Hahaha beruntung anda tidak menemukan musuh.'),nl.
-	
+
+
+interact :-
+	player_location(I,J),
+	home(I,J),
+	restore_full_health.
+
+interact :-
+	player_location(I,J),
+	guild(I,J),
+	take_quest.
+interact :-
+	player_location(I,J),
+	shop(I,J),
+	shop.
 
 % interact :-

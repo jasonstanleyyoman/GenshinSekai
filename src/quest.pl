@@ -7,15 +7,15 @@
 current_quest_id(0).
 
 % ID,GOLD,EXP
-reward(1,500,10),
-reward(2,600,20),
-reward(3,650,25),
-reward(4,700,30),
-reward(5,800,40),
-reward(6,800,45),
-reward(7,900,55),
-reward(8,950,70),
-reward(9,980,80),
+reward(1,500,10).
+reward(2,600,20).
+reward(3,650,25).
+reward(4,700,30).
+reward(5,800,40).
+reward(6,800,45).
+reward(7,900,55).
+reward(8,950,70).
+reward(9,980,80).
 reward(10,1000,90).
 
 % ID, NAME, SLIME, GOBLIN, WOLF
