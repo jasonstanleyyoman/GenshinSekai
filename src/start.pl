@@ -25,6 +25,7 @@ start :-
     assertz(enemy_level(1)),
     ['map.pl'],
     ['battle.pl'],
+    ['inventory.pl'],
     retractall(special_attack_available),
     ['help.pl'],
     

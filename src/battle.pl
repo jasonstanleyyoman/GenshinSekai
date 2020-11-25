@@ -39,6 +39,47 @@ attack :-
     assertz(enemy_current_health(NewEnemyHealth)),
     enemy_turn.
 
+special_attack:-
+    special_attack_available,!,
+    player_attack(PlayerAttack),
+    NewPlayerAttack is PlayerAttack * 2,
+    enemy_current_health(EnemyCurrentHealth),
+    enemy_defense(EnemyDefense),
+    DamageDealt is NewPlayerAttack - EnemyDefense,
+    NewEnemyCurrentHealth is EnemyCurrentHealth - DamageDealt,
+    write('You deal '), write(DamageDealt), write(' damage with special attack.'), nl,
+    retractall(special_attack_available),
+    retractall(special_attack_cooldown(_)),
+    retractall(enemy_current_health(_)),
+    assertz(enemy_current_health(NewEnemyCurrentHealth)),
+    assertz(special_attack_cooldown(3)),
+    enemy_turn.
+
+special_attack:-
+    special_attack_cooldown(Cooldown),
+    write('Special Attack is not Available'),nl,
+    write('Will available again in '), write(Cooldown), write(' turn.'),nl.
+
+%charge_special_attack membuat special attack available kalau cooldown telah habis
+charge_special_attack:-
+    special_attack_cooldown(Cooldown),
+    Cooldown =:= 0,
+    assertz(special_attack_available).
+
+reduce_special_attack_cooldown:-
+    special_attack_cooldown(Cooldown),
+    Cooldown > 0,
+    NewCooldown is Cooldown - 1,
+    retractall(special_attack_cooldown(_)),
+    assertz(special_attack_cooldown(NewCooldown)),
+    charge_special_attack.
+
+use_potion :-
+    between(1,3,PotionID),
+    potion_name(PotionID, PotionName),
+    write(PotionID), write('. '),write(PotionName),nl,
+    PotionID = 3.
+
 enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
@@ -46,7 +87,6 @@ enemy_turn :-
     EnemyHealth > 0,!,
     write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
     enemy_attack.
-
 
 enemy_turn :-
     enemy_current_health(EnemyHealth),
@@ -61,26 +101,6 @@ enemy_turn :-
     retractall(player_exp(_)),
     assertz(player_exp(NewPlayerExp)),
     level_up.
-
-special_attack:-
-    special_attack_available,!,
-    player_attack(PlayerAttack),
-    NewPlayerAttack is PlayerAttack * 2,
-    enemy_current_health(EnemyCurrentHealth),
-    NewEnemyCurrentHealth is EnemyCurrentHealth - NewPlayerAttack,
-    write('You deal '), write(NewPlayerAttack), write(' damage with special attack.'), nl,
-    retractall(special_attack_available),
-    retractall(special_attack_cooldown(_)),
-    retractall(enemy_current_health(_)),
-    assertz(enemy_current_health(NewEnemyCurrentHealth)),
-    assertz(special_attack_cooldown(3)),
-    enemy_turn.
-
-
-special_attack:-
-    special_attack_cooldown(Cooldown),
-    write('Special Attack is not Available'),nl,
-    write('Will available again in '), write(Cooldown), write(' turn.'),nl.
 
 enemy_attack :-
     enemy_id(ID),
@@ -106,18 +126,7 @@ check_player_status :-
     player_current_health(PlayerHealth),
     PlayerHealth > 0,
     write('Health Remaining : '), write(PlayerHealth),nl.
-reduce_special_attack_cooldown:-
-    special_attack_cooldown(Cooldown),
-    Cooldown =:= 0,
-    retractall(special_attack_available),
-    assertz(special_attack_available).
 
-reduce_special_attack_cooldown:-
-    special_attack_cooldown(Cooldown),
-    Cooldown > 0,!,fail,
-    NewCooldown is Cooldown - 1,
-    retractall(special_attack_cooldown(_)),
-    assertz(special_attack_cooldown(NewCooldown)).
 
 max_value(X,Y,Z) :-
     Y >= X,
