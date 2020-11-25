@@ -19,16 +19,16 @@ reward(9,980,80),
 reward(10,1000,90).
 
 % ID, NAME, SLIME, GOBLIN, WOLF
-quest(1, "Nama Quest", 2,0,0).
-quest(2, "Nama Quest", 4,0,0).
-quest(3, "Nama Quest", 5,0,0).
-quest(4, "Nama Quest", 3,2,0).
-quest(5, "Nama Quest", 1,4,0).
-quest(6, "Nama Quest", 0,7,0).
-quest(7, "Nama Quest", 3,3,1).
-quest(8, "Nama Quest", 0,6,3).
-quest(9, "Nama Quest", 0,2,5).
-quest(10, "Nama Quest", 0,0,8).
+quest(1, 'Getting Started', 2,0,0).
+quest(2, 'Beginner\'s Quest', 4,0,0).
+quest(3, 'Warming Up', 5,0,0).
+quest(4, 'Nama Quest', 3,2,0).
+quest(5, 'Nama Quest', 1,4,0).
+quest(6, 'Nama Quest', 0,7,0).
+quest(7, 'Nama Quest', 3,3,1).
+quest(8, 'Nama Quest', 0,6,3).
+quest(9, 'Nama Quest', 0,2,5).
+quest(10, 'Nama Quest', 0,0,8).
 
 take_quest :-
     \+ is_taking_quest,

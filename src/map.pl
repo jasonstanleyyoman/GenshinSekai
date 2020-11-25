@@ -229,6 +229,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	\+ playerposition(I,J),
 	shop(I,J),
 	write('S '),
 	NewJ is J+1,
@@ -240,6 +241,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	\+ playerposition(I,J),
 	home(I,J),
 	write('H '),
 	NewJ is J+1,
@@ -251,6 +253,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	\+ playerposition(I,J),
 	guild(I,J),
 	write('Q '),
 	NewJ is J+1,
@@ -273,6 +276,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	\+ playerposition(I,J),
 	boss(I,J),
 	write('B '),
 	NewJ is J+1,
@@ -296,11 +300,6 @@ w :-
 	playerposition(I,J),
 	NewI is I-1,
 	NewI =\= 0,
-	\+ shop(NewI,J),
-	\+ home(NewI,J),
-	\+ guild(NewI,J),
-	\+ barrier(NewI,J),
-	\+ boss(NewI,J),
 	retract(playerposition(I,J)),
 	assertz(playerposition(NewI,J)).
 
@@ -308,11 +307,6 @@ a :-
 	playerposition(I,J),
 	NewJ is J-1,
 	NewJ =\= 0,
-	\+ shop(I,NewJ),
-	\+ home(I,NewJ),
-	\+ guild(I,NewJ),
-	\+ barrier(I,NewJ),
-	\+ boss(I,NewJ),
 	retract(playerposition(I,J)),
 	assertz(playerposition(I,NewJ)).
 
@@ -320,11 +314,6 @@ s :-
 	playerposition(I,J),
 	NewI is I+1,
 	NewI =\= 24,
-	\+ shop(NewI,J),
-	\+ home(NewI,J),
-	\+ guild(NewI,J),
-	\+ barrier(NewI,J),
-	\+ boss(NewI,J),
 	retract(playerposition(I,J)),
 	assertz(playerposition(NewI,J)).
 
@@ -333,11 +322,6 @@ d :-
 	playerposition(I,J),
 	NewJ is J+1,
 	NewJ =\= 24,
-	\+ shop(I,NewJ),
-	\+ home(I,NewJ),
-	\+ guild(I,NewJ),
-	\+ barrier(I,NewJ),
-	\+ boss(I,NewJ),
 	retract(playerposition(I,J)),
 	assertz(playerposition(I,NewJ)).
 
