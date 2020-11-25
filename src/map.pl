@@ -2,7 +2,6 @@
 % Fakta
 mapsize(25,25).
 
-
 barrier(1,5).
 barrier(1,14).
 barrier(2,5).
@@ -135,6 +134,7 @@ shop(9,1).
 shop(18,12).
 
 guild(1,6).
+guild(1,2).
 guild(9,6).
 guild(21,1).
 
@@ -228,9 +228,8 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
-	shop(I,J),
 	player_location(I,J),
+	shop(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -252,9 +251,8 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
-	home(I,J),
 	player_location(I,J),
+	home(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -276,9 +274,8 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
-	guild(I,J),
 	player_location(I,J),
+	guild(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -311,7 +308,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ playerposition(I,J),
+	\+ player_location(I,J),
 	boss(I,J),
 	write('B '),
 	NewJ is J+1,
