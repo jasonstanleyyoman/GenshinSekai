@@ -16,8 +16,8 @@ start :-
     assertz(player_current_health(100)),
     assertz(player_max_health(100)),
     assertz(player_attack(20)),
-    assertz(player_defense(10)),
-    assertz(player_gold(1)),
+    assertz(player_defense(0)),
+    assertz(player_gold(10000)),
 
     ['enemy.pl'],
     retractall(enemy_level(_)),
@@ -31,7 +31,9 @@ start :-
     ['help.pl'],
     ['status.pl'],
     ['map.pl'],
-    ['quest.pl'].
+    ['quest.pl'],
+    ['home.pl'],
+    ['shop.pl'].
     /*
     write('░██████╗░███████╗███╗░░██╗░██████╗██╗░░██╗██╗███╗░░██╗  ░██████╗███████╗██╗░░██╗░█████╗░██╗'),nl,
     write('██╔════╝░██╔════╝████╗░██║██╔════╝██║░░██║██║████╗░██║  ██╔════╝██╔════╝██║░██╔╝██╔══██╗██║'),nl,

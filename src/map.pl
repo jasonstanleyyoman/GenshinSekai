@@ -2,7 +2,6 @@
 % Fakta
 mapsize(25,25).
 
-
 barrier(1,5).
 barrier(1,14).
 barrier(2,5).
@@ -130,11 +129,13 @@ barrier(22,19).
 barrier(22,20).
 barrier(22,21).
 
+shop(2,2).
 shop(7,1).
 shop(9,1).
 shop(18,12).
 
 guild(1,6).
+guild(1,2).
 guild(9,6).
 guild(21,1).
 
@@ -228,9 +229,8 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ player_location(I,J),
-	shop(I,J),
 	player_location(I,J),
+	shop(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -252,9 +252,8 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ player_location(I,J),
-	home(I,J),
 	player_location(I,J),
+	home(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -276,9 +275,8 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	\+ player_location(I,J),
-	guild(I,J),
 	player_location(I,J),
+	guild(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -418,7 +416,7 @@ ecounter_enemy :-
 	check_ecounter(EcounterChance, I).
 
 check_ecounter(Chance, I) :-
-	Chance < -1, !,
+	Chance < 4, !,
 	slime_zone(I),
 	start_battle(1).
 
@@ -448,6 +446,6 @@ interact :-
 interact :-
 	player_location(I,J),
 	shop(I,J),
-	shop.
+	enter_shop.
 
 % interact :-

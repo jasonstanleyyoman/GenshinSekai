@@ -3,22 +3,22 @@
 
 
 % Testing Purposes 
-:- dynamic(player_gold/1).
-:- dynamic(potion/2).
-:- dynamic(weapon/7).
-:- dynamic(armor/7).
-:- dynamic(accessory/7).
-:- dynamic(player_max_health/1).
-:- dynamic(player_attack/1).
-:- dynamic(player_defense/1).
-weapon(0, 'Wooden Sword', 1, 0, 200, 0, 1).
-armor(0, 'Iron Armor', 1, 0, 0, 0, 0).
-accessory(0, 'Wood Talisman', 1, 0, 0, 0, 0).
-player_gold(10000).
-player_job(2).
-player_max_health(10).
-player_attack(210).
-player_defense(10).
+% :- dynamic(player_gold/1).
+% :- dynamic(potion/2).
+% :- dynamic(weapon/7).
+% :- dynamic(armor/7).
+% :- dynamic(accessory/7).
+% :- dynamic(player_max_health/1).
+% :- dynamic(player_attack/1).
+% :- dynamic(player_defense/1).
+% weapon(0, 'Wooden Sword', 1, 0, 200, 0, 1).
+% armor(0, 'Iron Armor', 1, 0, 0, 0, 0).
+% accessory(0, 'Wood Talisman', 1, 0, 0, 0, 0).
+% player_gold(10000).
+% player_job(2).
+% player_max_health(10).
+% player_attack(210).
+% player_defense(10).
 
 % Utility Command
 update_player_status(0, _, _, _) :- !.
@@ -35,7 +35,7 @@ update_player_status(1, H, A, D) :-
 insideShop(false).
 
 % ----- Open Shop -----
-shop :-
+enter_shop :-
     write('>----- { MONDSTADT GENERAL GOODS } -----<'), nl, 
     write('Welcome to Mondstadt General Goods!'), nl,
     write('What do you want to buy?'), nl,
@@ -138,7 +138,7 @@ accessory_loot(3, 'Shard of Riddles', 3, 0, 0, 0).
 gacha :-
     player_gold(PlayerGold),
     PlayerGold < 1000 ->
-        write('You don\'t have enough gold.'), nl, shop
+        write('You don\'t have enough gold.'), nl, enter_shop
     ;   player_gold(PlayerGold),
         CurrentGold is PlayerGold - 1000,
         retract(player_gold(_)),
@@ -165,17 +165,17 @@ gacha(JobID) :-
         random(1, Stock, NthItem), nth(NthItem, WeaponStock, SelectedItem),
         % Update Stock Information
         select(SelectedItem, WeaponStock, UpdatedWeaponStock),
-        weapon(ItemID, _, _, H, A, D, Stat), TempList = [ItemID], append(TempList, UpdatedWeaponStock, FinalWeaponStock),
+        weapon(ItemID, _, _, H, A, D, _), TempList = [ItemID], append(TempList, UpdatedWeaponStock, FinalWeaponStock),
         retract(weapon_stock(_)), asserta(weapon_stock(FinalWeaponStock)),
         % Get Item
         weapon_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
         
         % Update Player Status
-        update_player_status(Stat, H, A, D),
+        update_player_status(_, H, A, D),
 
         % Update Player Inventory
         retract(weapon(ItemID, _, _, _, _, _, _)),
-        asserta(weapon(Item, ItemName, JobID, Health, Attack, Defense, 0)),
+        asserta(weapon(_, ItemName, JobID, Health, Attack, Defense, 0)),
 
         write('Congratulations! You got '), write(ItemName), write('.'), nl,
         write('----- < Item Details > -----'), nl,
@@ -203,11 +203,11 @@ gacha(JobID) :-
             armor_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
 
             % Update Player Status
-            update_player_status(Stat, H, A, D),
+            update_player_status(_, H, A, D),
 
             % Update Player Inventory
             retract(armor(ItemID, _, _, _, _, _, _)),
-            asserta(armor(Item, ItemName, JobID, Health, Attack, Defense, 0)),
+            asserta(armor(_, ItemName, JobID, Health, Attack, Defense, 0)),
 
             write('Congratulations! You got '), write(ItemName), write('.'), nl,
             write('----- < Item Details > -----'), nl,
@@ -223,7 +223,7 @@ gacha(JobID) :-
             write('Attack : '), write(ViewAtk), nl,
             write('Defense : '), write(ViewDef), nl
 
-    ; random(1, 3, Item), player_job(JobID),
+    ; random(1, 3, _), player_job(JobID),
         % Selecting Item from Stock
         accessory_stock(AccStock), length(AccStock, Stock),
         random(1, Stock, NthItem), nth(NthItem, AccStock, SelectedItem),
@@ -235,11 +235,11 @@ gacha(JobID) :-
         accessory_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
 
        % Update Player Status
-       update_player_status(Stat, H, A, D),
+       update_player_status(_, H, A, D),
 
         % Update Player Inventory
         retract(accessory(ItemID, _, _, _, _, _, _)),
-        asserta(accessory(Item, ItemName, JobID, Health, Attack, Defense, 0)),
+        asserta(accessory(_, ItemName, JobID, Health, Attack, Defense, 0)),
 
         write('Congratulations! You got '), write(ItemName), write('.'), nl,
         write('----- < Item Details > -----'), nl,
@@ -261,7 +261,7 @@ gacha(JobID) :-
 smallPotion :-
     player_gold(PlayerGold),
     PlayerGold < 200 ->
-        write('You don\'t have enough gold.'), nl, shop
+        write('You don\'t have enough gold.'), nl, enter_shop
     ;   asserta(potion(1, 300)),
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 200,
@@ -273,7 +273,7 @@ smallPotion :-
 mediumPotion :-
     player_gold(PlayerGold),
     PlayerGold < 400 ->
-        write('You don\'t have enough gold.'), nl, shop
+        write('You don\'t have enough gold.'), nl, enter_shop
     ;   asserta(potion(2, 600)),
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 400,
@@ -285,7 +285,7 @@ mediumPotion :-
 largePotion :-
     player_gold(PlayerGold),
     PlayerGold < 600 ->
-        write('You don\'t have enough gold.'), nl, shop
+        write('You don\'t have enough gold.'), nl, enter_shop
     ;   asserta(potion(3, 900)),
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 600,
