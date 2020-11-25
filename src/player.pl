@@ -10,11 +10,11 @@
 
 player_location(1,1).
 
-exp_required(1,100).
-exp_required(2,100).
-exp_required(3,100).
-exp_required(4,100).
-exp_required(5,100).
+exp_required(1,10).
+exp_required(2,12).
+exp_required(3,14).
+exp_required(4,18).
+exp_required(5,20).
 exp_required(6,100).
 exp_required(7,100).
 exp_required(9,100).

@@ -15,8 +15,8 @@ start :-
     assertz(player_level(1)),
     assertz(player_current_health(100)),
     assertz(player_max_health(100)),
-    assertz(player_attack(4)),
-    assertz(player_defense(2)),
+    assertz(player_attack(20)),
+    assertz(player_defense(10)),
     assertz(player_gold(1)),
 
     ['enemy.pl'],
@@ -58,3 +58,4 @@ start :-
     write('   Are you able to level yourself up and achieve completion of all quests to be able to defeat the creature '),nl,
     write('and earn yourself a place in Sinyalisisville ?'),nl.
     */
+    

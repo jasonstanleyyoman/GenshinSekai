@@ -7,13 +7,13 @@
 
 start_battle(ID) :-
     retractall(is_battle),
+    retractall(enemy_id(_)),
     retractall(enemy_current_health(_)),
     retractall(enemy_max_health(_)),
     retractall(enemy_attack(_)),
     retractall(enemy_defense(_)),
     retractall(special_attack_available),
     retractall(enemy_special_attack_available),
-    assertz(is_battle),
     enemy(ID, EnemyType),
     write('Ketemu '), write(EnemyType),nl,
     enemy_level(EnemyLevel),
@@ -33,6 +33,7 @@ start_battle(ID) :-
     assertz(enemy_special_attack_available).
     
 attack :-
+    is_battle,
     player_attack(Attack),
     enemy_current_health(EnemyHealth),
     enemy_defense(EnemyDefense),
@@ -40,11 +41,14 @@ attack :-
     NewEnemyHealth is (EnemyHealth - DamageDealt),
     write('You deal '), write(DamageDealt), write(' damage!.'),nl,
     retractall(enemy_current_health(_)),
-    assertz(enemy_current_health(NewEnemyHealth)),
-    enemy_reduce_special_attack_cooldown,
-    enemy_turn.
+    assertz(enemy_current_health(NewEnemyHealth)),  
+    enemy_turn,
+    enemy_reduce_special_attack_cooldown. 
+attack :-
+    write('You are not in battle.'),nl.
 
 special_attack:-
+    is_battle,
     special_attack_available,!,
     player_attack(PlayerAttack),
     NewPlayerAttack is PlayerAttack * 2,
@@ -58,13 +62,17 @@ special_attack:-
     retractall(enemy_current_health(_)),
     assertz(enemy_current_health(NewEnemyCurrentHealth)),
     assertz(special_attack_cooldown(3)),
-    enemy_reduce_special_attack_cooldown,
-    enemy_turn.
+    enemy_turn,
+    enemy_reduce_special_attack_cooldown.
 
 special_attack:-
+    is_battle,
     special_attack_cooldown(Cooldown),
     write('Special Attack is not Available'),nl,
     write('Will available again in '), write(Cooldown), write(' turn.'),nl.
+
+special_attack :-
+    write('You are not in battle'),nl.
 
 %charge_special_attack membuat special attack available kalau cooldown telah habis
 charge_special_attack:-
@@ -72,6 +80,7 @@ charge_special_attack:-
     Cooldown =:= 0,
     assertz(special_attack_available).
 
+%reduce_special_attack_cooldown kasus mengurangi cooldown dari special attack
 reduce_special_attack_cooldown:-
     special_attack_cooldown(Cooldown),
     Cooldown > 0,
@@ -79,6 +88,9 @@ reduce_special_attack_cooldown:-
     retractall(special_attack_cooldown(_)),
     assertz(special_attack_cooldown(NewCooldown)),
     charge_special_attack.
+
+%reduce_special_attack_cooldown kasus special attack masih available (tidak memiliki cooldown)
+reduce_special_attack_cooldown.
 
 %potion_list menampilkan list potion, hp gain potion, dan jumlah tiap potion
 potion_list :-
@@ -109,8 +121,8 @@ use_potion(PotionID) :-
     assertz(potion_count(PotionID, NewPotionCount)),
     write('You use '), write(PotionName),nl,
     write('You restored '), write(HealthRestored), write(' health'),nl,
-    enemy_reduce_special_attack_cooldown,
-    enemy_turn.
+    enemy_turn,
+    enemy_reduce_special_attack_cooldown.
 
 use_potion(_) :-
     player_current_health(PlayerCurrentHealth),
@@ -138,27 +150,15 @@ run_succeed(RunChance) :-
     RunChance >= 8,
     RunChance =< 10,
     write('You failed to run away '),nl,
-    enemy_reduce_special_attack_cooldown,
-    enemy_turn.
-
-%enemy_turn kasus enemy bisa special attack
-
-
-%enemy_turn kasus enemy tidak bisa special attack
-enemy_turn :-
-    enemy_current_health(EnemyHealth),
-    enemy_id(ID),
-    enemy(ID, EnemyName),
-    EnemyHealth > 0,!,
-    write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
-    enemy_attack.
+    enemy_turn,
+    enemy_reduce_special_attack_cooldown.
 
 %enemy_turn kasus enemy berhasil dikalahkan
 enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
     enemy(ID, EnemyName),
-    EnemyHealth =< 0, !,
+    EnemyHealth =< 0,
     write('You defeat '), write(EnemyName),nl,
     exp_gained(ExpGained),
     player_exp(PlayerExp),
@@ -166,7 +166,28 @@ enemy_turn :-
     write('You gain '), write(ExpGained), write(' EXP'),nl,
     retractall(player_exp(_)),
     assertz(player_exp(NewPlayerExp)),
+    retractall(is_battle),
     level_up.
+
+%enemy_turn kasus enemy bisa special attack
+enemy_turn :-
+    enemy_special_attack_available,!,
+    enemy_current_health(EnemyHealth),
+    enemy_id(ID),
+    enemy(ID, EnemyName),
+    EnemyHealth > 0,
+    write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
+    enemy_special_attack.
+
+%enemy_turn kasus enemy tidak bisa special attack
+enemy_turn :-
+    enemy_current_health(EnemyHealth),
+    enemy_id(ID),
+    enemy(ID, EnemyName),
+    EnemyHealth > 0,
+    write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
+    enemy_attack.
+
 
 enemy_attack :-
     enemy_id(ID),
@@ -180,11 +201,10 @@ enemy_attack :-
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
     write(EnemyName), write(' deal '), write(NewDamageDealt), write(' damage to you'),nl,
-    reduce_special_attack_cooldown,
-    check_player_status.
+    check_player_status,
+    reduce_special_attack_cooldown.
 
 enemy_special_attack :-
-    enemy_special_attack_available,!,
     enemy_id(ID),
     enemy(ID, EnemyName),
     enemy_attack(EnemyAttack),
@@ -199,14 +219,15 @@ enemy_special_attack :-
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
     assertz(enemy_special_attack_cooldown(3)),
-    reduce_special_attack_cooldown,
-    check_player_status.
+    check_player_status,
+    reduce_special_attack_cooldown.
 
 enemy_charge_special_attack :-
     enemy_special_attack_cooldown(Cooldown),
     Cooldown =:= 0,
     assertz(enemy_special_attack_available).
 
+%enemy_reduce_special_attack_cooldown kasus mengurangi cooldown special attack enemy
 enemy_reduce_special_attack_cooldown :-
     enemy_special_attack_cooldown(Cooldown),
     Cooldown > 0,
@@ -214,6 +235,9 @@ enemy_reduce_special_attack_cooldown :-
     retractall(enemy_special_attack_cooldown(_)),
     assertz(enemy_special_attack_cooldown(NewCooldown)),
     enemy_charge_special_attack.
+
+%enemy_reduce_special_attack_cooldown kasus enemy special attack masih available (tidak memiliki cooldown)
+enemy_reduce_special_attack_cooldown.
 
 check_player_status :-
     player_current_health(PlayerHealth),

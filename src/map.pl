@@ -355,6 +355,7 @@ a :-
 	assertz(player_location(I,NewJ)),
 	ecounter_enemy.
 a :-
+	is_battle,
 	write('You are battling'),nl.
 s :-
 	\+ is_battle,
@@ -390,10 +391,8 @@ ecounter_enemy :-
 	\+ barrier(I,J),
 	\+ boss(I,J),
 	random(1,10, EcounterChance),
-	EcounterChance < 4, !,
-	slime_zone(I),
-	start_battle(1).
-d.
+	check_ecounter(EcounterChance, I).
+
 ecounter_enemy :-
 	player_location(I,J),
 	\+ shop(I,J),
@@ -402,21 +401,35 @@ ecounter_enemy :-
 	\+ barrier(I,J),
 	\+ boss(I,J),
 	random(1,10, EcounterChance),
-	EcounterChance < 4, !,
+	check_ecounter(EcounterChance, I).
+
+ecounter_enemy :-
+	player_location(I,J),
+	\+ shop(I,J),
+	\+ home(I,J),
+	\+ guild(I,J),
+	\+ barrier(I,J),
+	\+ boss(I,J),
+	random(1,10, EcounterChance),
+	check_ecounter(EcounterChance, I).
+
+check_ecounter(Chance, I) :-
+	Chance < 4, !,
+	slime_zone(I),
+	start_battle(1).
+
+check_ecounter(Chance, I) :-
+	Chance < 4, !,
 	wolf_zone(I),
 	start_battle(2).
 
-ecounter_enemy :-
-	player_location(I,J),
-	\+ shop(I,J),
-	\+ home(I,J),
-	\+ guild(I,J),
-	\+ barrier(I,J),
-	\+ boss(I,J),
-	random(1,10, EcounterChance),
-	EcounterChance < 4, !,
+check_ecounter(Chance, I) :-
+	Chance < 4, !,
 	goblin_zone(I),
 	start_battle(3).
 
+check_ecounter(_, _) :-
+	write('Hahaha beruntung anda tidak menemukan musuh.'),nl.
+	
 
 % interact :-
