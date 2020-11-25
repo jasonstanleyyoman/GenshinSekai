@@ -1,6 +1,9 @@
 :- dynamic(is_battle/0).
 :- dynamic(special_attack_available/0).
 :- dynamic(special_attack_cooldown/1).
+:- dynamic(enemy_special_attack_available/0).
+:- dynamic(enemy_special_attack_cooldown/1).
+
 
 start_battle(ID) :-
     retractall(is_battle),
@@ -9,6 +12,7 @@ start_battle(ID) :-
     retractall(enemy_attack(_)),
     retractall(enemy_defense(_)),
     retractall(special_attack_available),
+    retractall(enemy_special_attack_available),
     assertz(is_battle),
     enemy(ID, EnemyType),
     write('Ketemu '), write(EnemyType),nl,
@@ -26,7 +30,8 @@ start_battle(ID) :-
     assertz(enemy_max_health(Health)),
     assertz(enemy_attack(Attack)),
     assertz(enemy_defense(Defense)),
-    assertz(special_attack_available).
+    assertz(special_attack_available),
+    assertz(enemy_special_attack_available).
     
 attack :-
     player_attack(Attack),
@@ -37,6 +42,7 @@ attack :-
     write('You deal '), write(DamageDealt), write(' damage!.'),nl,
     retractall(enemy_current_health(_)),
     assertz(enemy_current_health(NewEnemyHealth)),
+    enemy_reduce_special_attack_cooldown,
     enemy_turn.
 
 special_attack:-
@@ -53,6 +59,7 @@ special_attack:-
     retractall(enemy_current_health(_)),
     assertz(enemy_current_health(NewEnemyCurrentHealth)),
     assertz(special_attack_cooldown(3)),
+    enemy_reduce_special_attack_cooldown,
     enemy_turn.
 
 special_attack:-
@@ -74,12 +81,71 @@ reduce_special_attack_cooldown:-
     assertz(special_attack_cooldown(NewCooldown)),
     charge_special_attack.
 
-use_potion :-
+%potion_list menampilkan list potion, hp gain potion, dan jumlah tiap potion
+potion_list :-
     between(1,3,PotionID),
     potion_name(PotionID, PotionName),
-    write(PotionID), write('. '),write(PotionName),nl,
+    potion_count(PotionID, PotionCount),
+    write(PotionID), write('. '),write(PotionName),write('Count: '),write(PotionCount),nl,
     PotionID = 3.
 
+%use_potion menggunakan potion
+use_potion(PotionID) :-
+    potion_count(PotionID, PotionCount),
+    PotionCount > 0,
+    potion(PotionID, PotionHealthGain),
+    potion_name(PotionID, PotionName),
+    player_current_health(PlayerCurrentHealth),
+    player_max_health(PlayerMaxHealth),
+    PlayerCurrentHealth < PlayerMaxHealth,
+    PlayerLostHealth is PlayerMaxHealth - PlayerCurrentHealth,
+    min_value(PotionHealthGain, PlayerLostHealth, HealthRestored),
+    PlayerNewHealth is PlayerCurrentHealth + HealthRestored,
+    %memulihkan health player
+    retractall(player_current_health(_)),
+    assertz(player_current_health(PlayerNewHealth)),
+    %mengurangi jumlah potion karena terpakai
+    NewPotionCount is PotionCount - 1,
+    retractall(potion_count(PotionID, _)),
+    assertz(potion_count(PotionID, NewPotionCount)),
+    write('You use '), write(PotionName),nl,
+    write('You restored '), write(HealthRestored), write(' health'),nl,
+    enemy_reduce_special_attack_cooldown,
+    enemy_turn.
+
+use_potion(_) :-
+    player_current_health(PlayerCurrentHealth),
+    player_max_health(PlayerMaxHealth),
+    PlayerCurrentHealth =:= PlayerMaxHealth,
+    write('You are already on max health'),nl.
+
+use_potion(PotionID) :-
+    potion_count(PotionID, PotionCount),
+    PotionCount =< 0,
+    potion_name(PotionID, PotionName),
+    write('You run out of '), write(PotionName),nl.
+
+run :-
+    random(1,10, RunChance),
+    run_succeed(RunChance).
+
+%chance lari dari slime
+run_succeed(RunChance) :-
+    RunChance >= 1,
+    RunChance =< 7,
+    write('You run away successfully'),nl.
+
+run_succeed(RunChance) :-
+    RunChance >= 8,
+    RunChance =< 10,
+    write('You failed to run away '),nl,
+    enemy_reduce_special_attack_cooldown,
+    enemy_turn.
+
+%enemy_turn kasus enemy bisa special attack
+
+
+%enemy_turn kasus enemy tidak bisa special attack
 enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
@@ -88,6 +154,7 @@ enemy_turn :-
     write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
     enemy_attack.
 
+%enemy_turn kasus enemy berhasil dikalahkan
 enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
@@ -117,6 +184,38 @@ enemy_attack :-
     reduce_special_attack_cooldown,
     check_player_status.
 
+enemy_special_attack :-
+    enemy_special_attack_available,!,
+    enemy_id(ID),
+    enemy(ID, EnemyName),
+    enemy_attack(EnemyAttack),
+    player_current_health(PlayerHealth),
+    player_defense(PlayerDefense),
+    DamageDealt is 2*EnemyAttack - PlayerDefense,
+    max_value(DamageDealt, 0, NewDamageDealt),!,
+    PlayerNewHealth is PlayerHealth - NewDamageDealt,
+    write(EnemyName), write(' deal '), write(NewDamageDealt), write(' damage with special attack to you'),nl,
+    retractall(enemy_special_attack_available),
+    retractall(enemy_special_attack_cooldown(_)),
+    retractall(player_current_health(_)),
+    assertz(player_current_health(PlayerNewHealth)),
+    assertz(enemy_special_attack_cooldown(3)),
+    reduce_special_attack_cooldown,
+    check_player_status.
+
+enemy_charge_special_attack :-
+    enemy_special_attack_cooldown(Cooldown),
+    Cooldown =:= 0,
+    assertz(enemy_special_attack_available).
+
+enemy_reduce_special_attack_cooldown :-
+    enemy_special_attack_cooldown(Cooldown),
+    Cooldown > 0,
+    NewCooldown is Cooldown - 1,
+    retractall(enemy_special_attack_cooldown(_)),
+    assertz(enemy_special_attack_cooldown(NewCooldown)),
+    enemy_charge_special_attack.
+
 check_player_status :-
     player_current_health(PlayerHealth),
     PlayerHealth =< 0,
@@ -135,6 +234,14 @@ max_value(X,Y,Z) :-
 
 max_value(X,Y,Z) :-
     X > Y,
+    Z is X.
+
+min_value(X,Y,Z) :-
+    Y =< X,
+    Z is Y.
+
+min_value(X,Y,Z) :-
+    X < Y,
     Z is X.
 
 %attack :-

@@ -28,7 +28,8 @@ start :-
     ['inventory.pl'],
     retractall(special_attack_available),
     ['help.pl'],
-    
+    ['status.pl'].
+    /*
     write('░██████╗░███████╗███╗░░██╗░██████╗██╗░░██╗██╗███╗░░██╗  ░██████╗███████╗██╗░░██╗░█████╗░██╗'),nl,
     write('██╔════╝░██╔════╝████╗░██║██╔════╝██║░░██║██║████╗░██║  ██╔════╝██╔════╝██║░██╔╝██╔══██╗██║'),nl,
     write('██║░░██╗░█████╗░░██╔██╗██║╚█████╗░███████║██║██╔██╗██║  ╚█████╗░█████╗░░█████═╝░███████║██║'),nl,
@@ -54,3 +55,4 @@ start :-
     write('death with a monstrous creature which is guarding the city.'),nl,
     write('   Are you able to level yourself up and achieve completion of all quests to be able to defeat the creature '),nl,
     write('and earn yourself a place in Sinyalisisville ?'),nl.
+    */
