@@ -1,19 +1,33 @@
 /* File : shop.pl */
 /* Gacha dan Buy Potions */
 
-/*
+
 % Testing Purposes 
 :- dynamic(player_gold/1).
 :- dynamic(potion/2).
-:- dynamic(weapon/6).
-:- dynamic(armor/6).
-:- dynamic(accessory/6).
+:- dynamic(weapon/7).
+:- dynamic(armor/7).
+:- dynamic(accessory/7).
+:- dynamic(player_max_health/1).
+:- dynamic(player_attack/1).
+:- dynamic(player_defense/1).
+weapon(0, 'Wooden Sword', 1, 0, 200, 0, 1).
+armor(0, 'Iron Armor', 1, 0, 0, 0, 0).
+accessory(0, 'Wood Talisman', 1, 0, 0, 0, 0).
 player_gold(10000).
 player_job(2).
-weapon(0, 'Wooden Sword', 1, 0, 0, 0).
-armor(0, 'Iron Armor', 1, 0, 0, 0).
-accessory(0, 'Wood Talisman', 1, 0, 0, 0). 
-*/
+player_max_health(10).
+player_attack(210).
+player_defense(10).
+
+% Utility Command
+update_player_status(0, _, _, _) :- !.
+update_player_status(2, _, _, _) :- !.
+update_player_status(1, H, A, D) :-
+    player_attack(Atk), player_defense(Def), player_max_health(HP),
+    UpdatedHealth is HP-H, UpdatedAtk is Atk-A, UpdatedDef is Def-D,
+    retract(player_defense(_)), retract(player_max_health(_)), retract(player_attack(_)),
+    asserta(player_defense(UpdatedDef)), asserta(player_max_health(UpdatedHealth)), asserta(player_attack(UpdatedAtk)).
 
 /* -----[ SHOP ] ----- */
 % ----- Inside Shop -----
@@ -22,15 +36,20 @@ insideShop(false).
 
 % ----- Open Shop -----
 shop :-
+    write('>----- { MONDSTADT GENERAL GOODS } -----<'), nl, 
     write('Welcome to Mondstadt General Goods!'), nl,
     write('What do you want to buy?'), nl,
     write('1. Gacha : 1000 Gold'), nl,
+    write('!Warning! The gacha system will automatically replace your equipments.'), nl,
+    write('          You may or may not get stronger equipments.'), nl,
     write('2. Small Potion (300 HP) : 200 Gold'), nl,
     write('3. Medium Potion (600 HP) : 400 Gold'), nl,
     write('4. Large Potion (900 HP) : 600 Gold'), nl,
     nl,
-    write('(Commands : gacha, smallPotion, mediumPotion)'), nl,
-    write('(           largePotion, exitShop)'),
+    write('(Commands : gacha, smallPotion, mediumPotion'), nl,
+    write('            largePotion, exitShop           )'), nl,
+    write('(Tip : Before gacha, try to equip all your equipments first,'), nl,
+    write('(      So, you will see an accurate before and after stats  )'),
 
     retract(insideShop(_)),
     asserta(insideShop(true)).
@@ -38,7 +57,8 @@ shop :-
 % ----- Exit Shop -----
 exitShop :-
     write('Thank you for coming to Mondstadt General Goods.'), nl,
-    write('Please come again. '),
+    write('Please come again. '), nl,
+    write('>---------------------------------------<'), nl, 
     
     retract(insideShop(_)),
     asserta(insideShop(false)).
@@ -124,31 +144,51 @@ gacha :-
         retract(player_gold(_)),
         asserta(player_gold(CurrentGold)),
 
+        player_attack(Atk), player_defense(Def), player_max_health(HP),
+        write('This is your status before Gacha : '), nl,
+        write('----- [ CURRENT PLAYER STATUS ] -----'), nl,
+        write('Health : '), write(HP), nl,
+        write('Attack : '), write(Atk), nl,
+        write('Defense : '), write(Def), nl, nl,
+
         player_job(JobID), gacha(JobID).
 
 % LootType : 1 - Weapon
 %            2 - Armor
 %            3 - Accessory
 gacha(JobID) :-
-    random(1, 3, LootType), 
+    %random(1, 3, LootType), 
+    LootType = 1,
     LootType =:= 1 ->
         % Selecting Item from Stock
         weapon_stock(WeaponStock), length(WeaponStock, Stock),
         random(1, Stock, NthItem), nth(NthItem, WeaponStock, SelectedItem),
         % Update Stock Information
         select(SelectedItem, WeaponStock, UpdatedWeaponStock),
-        weapon(ItemID, _, _, _, _, _), TempList = [ItemID], append(TempList, UpdatedWeaponStock, FinalWeaponStock),
+        weapon(ItemID, _, _, H, A, D, Stat), TempList = [ItemID], append(TempList, UpdatedWeaponStock, FinalWeaponStock),
         retract(weapon_stock(_)), asserta(weapon_stock(FinalWeaponStock)),
         % Get Item
         weapon_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
+        
+        % Update Player Status
+        update_player_status(Stat, H, A, D),
+
         % Update Player Inventory
-        retract(weapon(ItemID, _, _, _, _, _)),
-        asserta(weapon(Item, ItemName, JobID, Health, Attack, Defense)),
+        retract(weapon(ItemID, _, _, _, _, _, _)),
+        asserta(weapon(Item, ItemName, JobID, Health, Attack, Defense, 0)),
 
         write('Congratulations! You got '), write(ItemName), write('.'), nl,
-        write('--- [ Item Details ] ---'), nl,
+        write('----- < Item Details > -----'), nl,
         write('Type : Weapon'), nl,
-        write('Attack :'), write(Attack), nl
+        write('Attack :'), write(Attack), nl, nl,
+
+        player_attack(Atk), player_defense(Def), player_max_health(HP),
+        ViewHealth is HP+Health, ViewAtk is Atk+Attack, ViewDef is Def+Defense,
+        write('This is your status after Gacha (Assuming it is equipped) : '), nl,
+        write('----- [ UPDATED PLAYER STATUS ] -----'), nl,
+        write('Health : '), write(ViewHealth), nl,
+        write('Attack : '), write(ViewAtk), nl,
+        write('Defense : '), write(ViewDef), nl
 
     ; random(2, 3, LootType), 
         LootType =:= 2 ->
@@ -157,19 +197,31 @@ gacha(JobID) :-
             random(1, Stock, NthItem), nth(NthItem, ArmorStock, SelectedItem),
             % Update Stock Information
             select(SelectedItem, ArmorStock, UpdatedArmorStock),
-            armor(ItemID, _, _, _, _, _), TempList = [ItemID], append(TempList, UpdatedArmorStock, FinalArmorStock),
+            armor(ItemID, _, _, H, A, D, _), TempList = [ItemID], append(TempList, UpdatedArmorStock, FinalArmorStock),
             retract(armor_stock(_)), asserta(armor_stock(FinalArmorStock)),
             % Get Item
             armor_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
+
+            % Update Player Status
+            update_player_status(Stat, H, A, D),
+
             % Update Player Inventory
-            retract(armor(ItemID, _, _, _, _, _)),
-            asserta(armor(Item, ItemName, JobID, Health, Attack, Defense)),
+            retract(armor(ItemID, _, _, _, _, _, _)),
+            asserta(armor(Item, ItemName, JobID, Health, Attack, Defense, 0)),
 
             write('Congratulations! You got '), write(ItemName), write('.'), nl,
-            write('--- [ Item Details ] ---'), nl,
+            write('----- < Item Details > -----'), nl,
             write('Type : Armor'), nl,
             write('Health :'), write(Health), nl,
-            write('Defense :'), write(Defense), nl
+            write('Defense :'), write(Defense), nl, nl,
+
+            player_attack(Atk), player_defense(Def), player_max_health(HP),
+            ViewHealth is HP+Health, ViewAtk is Atk+Attack, ViewDef is Def+Defense,
+            write('This is your status after Gacha (Assuming it is equipped) : '), nl,
+            write('----- [ UPDATED PLAYER STATUS ] -----'), nl,
+            write('Health : '), write(ViewHealth), nl,
+            write('Attack : '), write(ViewAtk), nl,
+            write('Defense : '), write(ViewDef), nl
 
     ; random(1, 3, Item), player_job(JobID),
         % Selecting Item from Stock
@@ -177,20 +229,32 @@ gacha(JobID) :-
         random(1, Stock, NthItem), nth(NthItem, AccStock, SelectedItem),
         % Update Stock Information
         select(SelectedItem, AccStock, UpdatedAccStock),
-        accessory(ItemID, _, _, _, _, _), TempList = [ItemID], append(TempList, UpdatedAccStock, FinalAccStock),
+        accessory(ItemID, _, _, H, A, D, _), TempList = [ItemID], append(TempList, UpdatedAccStock, FinalAccStock),
         retract(accessory_stock(_)), asserta(accessory_stock(FinalAccStock)),
         % Get Item
         accessory_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
+
+       % Update Player Status
+       update_player_status(Stat, H, A, D),
+
         % Update Player Inventory
-        retract(accessory(ItemID, _, _, _, _, _)),
-        asserta(accessory(Item, ItemName, JobID, Health, Attack, Defense)),
+        retract(accessory(ItemID, _, _, _, _, _, _)),
+        asserta(accessory(Item, ItemName, JobID, Health, Attack, Defense, 0)),
 
         write('Congratulations! You got '), write(ItemName), write('.'), nl,
-        write('--- [ Item Details ] ---'), nl,
+        write('----- < Item Details > -----'), nl,
         write('Type : Accessory'), nl,
         write('Health :'), write(Health), nl,
         write('Attack :'), write(Attack), nl,
-        write('Defense :'), write(Defense), nl.
+        write('Defense :'), write(Defense), nl, nl,
+
+        player_attack(Atk), player_defense(Def), player_max_health(HP),
+        ViewHealth is HP+Health, ViewAtk is Atk+Attack, ViewDef is Def+Defense,
+        write('This is your status after Gacha (Assuming it is equipped) : '), nl,
+        write('----- [ UPDATED PLAYER STATUS ] -----'), nl,
+        write('Health : '), write(ViewHealth), nl,
+        write('Attack : '), write(ViewAtk), nl,
+        write('Defense : '), write(ViewDef), nl.
 
 /* -----[ POTIONS ] ----- */
 % ----- Equipment Count -----
