@@ -49,3 +49,33 @@ check_quest :-
     write('Slime : '),write(K),nl,
     write('Goblin : '),write(L),nl,
     write('Wolf : '),write(M),nl.
+
+add_quest_progress_slime :-
+    quest_progress(A,B,C),
+    retractall(quest_progress(A,B,C)),
+    NewA is A+1,
+    assertz(quest_progress(NewA,B,C)).
+
+add_quest_progress_goblin :-
+    quest_progress(A,B,C),
+    retractall(quest_progress(A,B,C)),
+    NewB is B+1,
+    assertz(quest_progress(A,NewB,C)).
+
+add_quest_progress_wolf :-
+    quest_progress(A,B,C),
+    retractall(quest_progress(A,B,C)),
+    NewC is C+1,
+    assertz(quest_progress(A,B,NewC)).
+
+% ngecek quest uda kelar ato belom
+check_quest_done :-
+    quest_progress(A,B,C),
+    current_quest_id(I),
+    quest(I, J, K, L, M),
+    A >= K,
+    B >= L,
+    C >= M,
+    retract(is_taking_quest),
+    retractall(quest_progress(_,_,_)).
+    % ngasih reward sesuai ID

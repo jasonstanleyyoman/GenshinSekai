@@ -167,6 +167,12 @@ enemy_turn :-
     retractall(player_exp(_)),
     assertz(player_exp(NewPlayerExp)),
     retractall(is_battle),
+    quest_progress(M,N,O),
+    retract(quest_progress(M,N,O)),
+    ((ID = 1 -> (NewM is (M+1), NewN is N, NewO is O));
+    (ID = 2 -> (NewO is (O+1), NewM is M, NewN is N));
+    (ID = 3 -> (NewN is (N+1), NewM is M, NewO is O))),
+    assertz(quest_progress(NewM, NewO, NewN)),
     level_up.
 
 %enemy_turn kasus enemy bisa special attack
