@@ -33,7 +33,7 @@ level_up :-
     player_exp(CurrentExp),
     exp_required(CurrentLevel, ExpRequired),
     write('EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
-    CurrentExp >= ExpRequired, !, fail,
+    CurrentExp >= ExpRequired, !,
     retractall(player_level(_)),
     NewLevel is CurrentLevel + 1,
     assertz(player_level(NewLevel)),

@@ -129,6 +129,7 @@ barrier(22,19).
 barrier(22,20).
 barrier(22,21).
 
+shop(2,2).
 shop(7,1).
 shop(9,1).
 shop(18,12).
@@ -431,6 +432,20 @@ check_ecounter(Chance, I) :-
 
 check_ecounter(_, _) :-
 	write('Hahaha beruntung anda tidak menemukan musuh.'),nl.
-	
+
+
+interact :-
+	player_location(I,J),
+	home(I,J),
+	restore_full_health.
+
+interact :-
+	player_location(I,J),
+	guild(I,J),
+	take_quest.
+interact :-
+	player_location(I,J),
+	shop(I,J),
+	enter_shop.
 
 % interact :-

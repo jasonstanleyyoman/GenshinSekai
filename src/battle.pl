@@ -273,6 +273,8 @@ min_value(X,Y,Z) :-
     X < Y,
     Z is X.
 
+
+
 %attack :-
 
 %special_attack :-
