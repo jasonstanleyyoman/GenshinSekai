@@ -1,9 +1,32 @@
 :- dynamic(is_battle/0).
+:- dynamic(is_boss_battle/0).
 :- dynamic(special_attack_available/0).
 :- dynamic(special_attack_cooldown/1).
 :- dynamic(enemy_special_attack_available/0).
 :- dynamic(enemy_special_attack_cooldown/1).
 
+
+:- dynamic(boss_special_attack_available/0).
+:- dynamic(boss_special_attack_cooldown/1).
+
+start_boss_battle :-
+    retractall(is_boss_battle),
+    retractall(boss_current_health(_)),
+    retractall(special_attack_available),
+    retractall(boss_special_attack_available),
+    retractall(enemy_id(_)),
+    retractall(enemy_current_health(_)),
+    retractall(enemy_max_health(_)),
+    retractall(enemy_attack(_)),
+    retractall(enemy_defense(_)),
+    retractall(enemy_special_attack_available),
+    boss_name(BossName),
+    write('Ketemu '), write(BossName),nl,
+    assertz(is_boss_battle),
+    boss_max_health(BossMaxHealth),
+    assertz(boss_current_health(BossMaxHealth)),
+    assertz(special_attack_available),
+    assertz(boss_special_attack_available).
 
 start_battle(ID) :-
     retractall(is_battle),
@@ -185,7 +208,23 @@ attack :-
     assertz(enemy_current_health(NewEnemyHealth)),  
     enemy_turn,
     enemy_reduce_special_attack_cooldown. 
+
 attack :-
+    is_boss_battle,
+    player_attack(Attack),
+    boss_current_health(BossHealth),
+    boss_defense(BossDefense),
+    DamageDealt is Attack - BossDefense,
+    NewBossHealth is (BossHealth - DamageDealt),
+    write('You deal '), write(DamageDealt), write(' damage!.'),nl,
+    retractall(boss_current_health(_)),
+    assertz(boss_current_health(NewBossHealth)),  
+    boss_turn,
+    boss_reduce_special_attack_cooldown. 
+
+attack :-
+    \+ is_battle,
+    \+ is_boss_battle,
     write('You are not in battle.'),nl.
 
 special_attack:-
@@ -207,7 +246,31 @@ special_attack:-
     enemy_reduce_special_attack_cooldown.
 
 special_attack:-
+    is_boss_battle,
+    special_attack_available,!,
+    player_attack(PlayerAttack),
+    NewPlayerAttack is PlayerAttack * 2,
+    boss_current_health(BossCurrentHealth),
+    boss_defense(BossDefense),
+    DamageDealt is NewPlayerAttack - BossDefense,
+    NewBossCurrentHealth is BossCurrentHealth - DamageDealt,
+    write('You deal '), write(DamageDealt), write(' damage with special attack.'), nl,
+    retractall(special_attack_available),
+    retractall(special_attack_cooldown(_)),
+    retractall(boss_current_health(_)),
+    assertz(boss_current_health(NewBossCurrentHealth)),
+    assertz(special_attack_cooldown(3)),
+    boss_turn,
+    boss_reduce_special_attack_cooldown.
+
+special_attack:-
     is_battle,
+    special_attack_cooldown(Cooldown),
+    write('Special Attack is not Available'),nl,
+    write('Will available again in '), write(Cooldown), write(' turn.'),nl.
+
+special_attack:-
+    is_boss_battle,
     special_attack_cooldown(Cooldown),
     write('Special Attack is not Available'),nl,
     write('Will available again in '), write(Cooldown), write(' turn.'),nl.
@@ -243,6 +306,7 @@ potion_list :-
 
 %use_potion menggunakan potion
 use_potion(PotionID) :-
+    is_battle,
     potion_count(PotionID, PotionCount),
     PotionCount > 0,
     potion(PotionID, PotionHealthGain),
@@ -265,6 +329,30 @@ use_potion(PotionID) :-
     enemy_turn,
     enemy_reduce_special_attack_cooldown.
 
+use_potion(PotionID) :-
+    is_boss_battle,
+    potion_count(PotionID, PotionCount),
+    PotionCount > 0,
+    potion(PotionID, PotionHealthGain),
+    potion_name(PotionID, PotionName),
+    player_current_health(PlayerCurrentHealth),
+    player_max_health(PlayerMaxHealth),
+    PlayerCurrentHealth < PlayerMaxHealth,
+    PlayerLostHealth is PlayerMaxHealth - PlayerCurrentHealth,
+    min_value(PotionHealthGain, PlayerLostHealth, HealthRestored),
+    PlayerNewHealth is PlayerCurrentHealth + HealthRestored,
+    %memulihkan health player
+    retractall(player_current_health(_)),
+    assertz(player_current_health(PlayerNewHealth)),
+    %mengurangi jumlah potion karena terpakai
+    NewPotionCount is PotionCount - 1,
+    retractall(potion_count(PotionID, _)),
+    assertz(potion_count(PotionID, NewPotionCount)),
+    write('You use '), write(PotionName),nl,
+    write('You restored '), write(HealthRestored), write(' health'),nl,
+    boss_turn,
+    boss_reduce_special_attack_cooldown.
+
 use_potion(_) :-
     player_current_health(PlayerCurrentHealth),
     player_max_health(PlayerMaxHealth),
@@ -285,14 +373,25 @@ run :-
 run_succeed(RunChance) :-
     RunChance >= 1,
     RunChance =< 7,
+    retractall(is_battle),
+    retractall(is_boss_battle),
     write('You run away successfully'),nl.
 
 run_succeed(RunChance) :-
+    is_battle,
     RunChance >= 8,
     RunChance =< 10,
     write('You failed to run away '),nl,
     enemy_turn,
     enemy_reduce_special_attack_cooldown.
+
+run_succeed(RunChance) :-
+    is_boss_battle,
+    RunChance >= 8,
+    RunChance =< 10,
+    write('You failed to run away '),nl,
+    boss_turn,
+    boss_reduce_special_attack_cooldown.
 
 %enemy_turn kasus enemy berhasil dikalahkan
 enemy_turn :-
@@ -386,6 +485,139 @@ enemy_reduce_special_attack_cooldown :-
 
 %enemy_reduce_special_attack_cooldown kasus enemy special attack masih available (tidak memiliki cooldown)
 enemy_reduce_special_attack_cooldown.
+
+%boss_turn kasus boss berhasil dikalahkan
+boss_turn :-
+    boss_current_health(BossHealth),
+    BossHealth =< 0,
+    boss_name(BossName),
+    write('You defeat '), write(BossName),nl,
+    retractall(is_boss_battle).
+    %Goal state masukin disini
+
+%boss_turn 
+boss_turn :-
+    boss_current_health(BossHealth),
+    boss_name(BossName),
+    BossHealth > 0,
+    write(BossName), write(' Hang up with '), write(BossHealth), write(' health left.'),nl,
+    boss_action.
+
+%boss_action menentukan tindakan boss pada gilirannya
+boss_action :-  
+                random(1,15,BossAction),
+                boss_attack_action(BossAction),
+                boss_special_attack_action(BossAction),
+                boss_gust_action(BossAction),
+                boss_healing_action(BossAction).
+
+boss_attack_action(BossAction) :-
+    BossAction >= 1,
+    BossAction =< 7,
+    boss_name(BossName),
+    boss_attack(BossAttack),
+    player_current_health(PlayerHealth),
+    player_defense(PlayerDefense),
+    DamageDealt is BossAttack - PlayerDefense,
+    max_value(DamageDealt, 0, NewDamageDealt),!,
+    PlayerNewHealth is PlayerHealth - NewDamageDealt,
+    retractall(player_current_health(_)),
+    assertz(player_current_health(PlayerNewHealth)),
+    write(BossName), write(' deal '), write(NewDamageDealt), write(' damage to you'),nl,
+    check_player_status,
+    reduce_special_attack_cooldown.
+
+boss_attack_action(_).
+
+boss_special_attack_action(BossAction) :-
+    boss_special_attack_available,
+    BossAction >= 8,
+    BossAction =< 11,
+    boss_name(BossName),
+    boss_attack(BossAttack),
+    player_current_health(PlayerHealth),
+    player_defense(PlayerDefense),
+    DamageDealt is 2*BossAttack - PlayerDefense,
+    max_value(DamageDealt, 0, NewDamageDealt),!,
+    PlayerNewHealth is PlayerHealth - NewDamageDealt,
+    write(BossName), write(' deal '), write(NewDamageDealt), write(' damage with special attack to you'),nl,
+    retractall(boss_special_attack_available),
+    retractall(boss_special_attack_cooldown(_)),
+    retractall(player_current_health(_)),
+    assertz(player_current_health(PlayerNewHealth)),
+    assertz(boss_special_attack_cooldown(3)),
+    check_player_status,
+    reduce_special_attack_cooldown.
+
+boss_special_attack_action(BossAction) :-
+    BossAction >= 8,
+    BossAction =< 11,
+    \+ boss_special_attack_available,
+    boss_action.
+
+boss_special_attack_action(_).
+
+boss_charge_special_attack :-
+    boss_special_attack_cooldown(Cooldown),
+    Cooldown =:= 0,
+    assertz(boss_special_attack_available).
+
+%boss_reduce_special_attack_cooldown kasus mengurangi cooldown special attack boss
+boss_reduce_special_attack_cooldown :-
+    boss_special_attack_cooldown(Cooldown),
+    Cooldown > 0,
+    NewCooldown is Cooldown - 1,
+    retractall(boss_special_attack_cooldown(_)),
+    assertz(boss_special_attack_cooldown(NewCooldown)),
+    boss_charge_special_attack.
+
+%boss_reduce_special_attack_cooldown kasus boss special attack masih available (tidak memiliki cooldown)
+boss_reduce_special_attack_cooldown.
+
+
+%boss_gust serangan boss yang mengakibatkan player kehilangan sejumlah potion
+boss_gust_action(BossAction) :-
+    BossAction >= 12,
+    BossAction =< 14,
+    random(1,3,PotionID),
+    potion_count(PotionID, CurrentPotionCount),
+    min_value(1, CurrentPotionCount, PotionLost),
+    NewPotionCount is (CurrentPotionCount - PotionLost),
+    retract(potion_count(PotionID,_)),
+    assertz(potion_count(PotionID,NewPotionCount)),
+    write('Dvalin uses gust'),nl,
+    write('Player loses '), write(PotionLost), write(' potion(s)'),nl,
+    check_player_status,
+    reduce_special_attack_cooldown.
+
+boss_gust_action(_).
+
+%boss_healing boss dapat memulihkan healthnya
+boss_healing_action(BossAction) :- 
+    BossAction =:= 15,
+    boss_current_health(CurrentHealth),
+    boss_max_health(MaxHealth),
+    CurrentHealth < MaxHealth,
+    BossHealthLoss is MaxHealth - CurrentHealth,
+    SkillHealAmount is (1/10*MaxHealth),
+    min_value(BossHealthLoss, SkillHealAmount, BossHealAmount),
+    NewBossHealth is (CurrentHealth + BossHealAmount),
+    retractall(boss_current_health(_)),
+    assertz(boss_current_health(NewBossHealth)),
+    write('Dvalin heals himself for '),
+    write(BossHealAmount),
+    write(' health.'),nl,
+    check_player_status,
+    reduce_special_attack_cooldown.
+
+boss_healing_action(BossAction) :-
+    BossAction =:= 15,
+    boss_current_health(CurrentHealth),
+    boss_max_health(MaxHealth),
+    CurrentHealth =:= MaxHealth,
+    boss_action.
+
+boss_healing_action(_).
 
 check_player_status :-
     player_current_health(PlayerHealth),
