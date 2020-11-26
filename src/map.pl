@@ -175,7 +175,7 @@ drawfence(I,J) :-
 	I = 0,
 	J > 0,
 	J < A-1,
-	write('X '),
+	write('# '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
 
@@ -184,7 +184,7 @@ drawfence(I,J) :-
 	mapsize(A,_),
 	J = 0,
 	I < A,
-	write('X '),
+	write('# '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
 
@@ -193,7 +193,7 @@ drawfence(I,J) :-
 	mapsize(A,B),
 	J > B-2,
 	I < A,
-	write('X'),
+	write('#'),
 	nl,
 	NewI is I+1,
 	drawfence(NewI, 0).
@@ -203,7 +203,7 @@ drawfence(I,J) :-
 	I > 23,
 	J > 0,
 	J < 24,
-	write('X '),
+	write('# '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
 
@@ -299,7 +299,7 @@ drawfence(I,J) :-
 	J > 0,
 	J < 24,
 	barrier(I,J),
-	write('X '),
+	write('# '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
 
@@ -311,7 +311,18 @@ drawfence(I,J) :-
 	J < 24,
 	\+ player_location(I,J),
 	boss(I,J),
-	write('B '),
+	write('D '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	player_location(I,J),
+	boss(I,J),
+	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
 
@@ -352,10 +363,21 @@ a :-
 	player_location(I,J),
 	NewJ is J-1,
 	NewJ =\= 0,
+	\+ boss(I,NewJ),
 	\+ barrier(I,NewJ),
 	retract(player_location(I,J)),
 	assertz(player_location(I,NewJ)),
 	ecounter_enemy.
+
+a :-
+	player_location(I,J),
+	NewJ is J-1,
+	boss(I,NewJ),
+	retractall(player_location(_,_)),
+	assertz(player_location(I,NewJ)),
+	assertz(is_battle),
+	start_boss_battle.
+
 a :-
 	is_battle,
 	write('You are battling'),nl.

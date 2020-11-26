@@ -32,10 +32,11 @@ start :-
     retractall(is_battle),
     ['help.pl'],
     ['status.pl'],
-    ['map.pl'],
     ['quest.pl'],
     ['home.pl'],
     ['shop.pl'],
+    ['boss.pl'],
+    ['quit.pl'],
 
                                                                                                     
     write('                                                         `-`                          '),nl,          
