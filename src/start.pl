@@ -15,9 +15,9 @@ start :-
     assertz(player_level(1)),
     assertz(player_current_health(100)),
     assertz(player_max_health(100)),
-    assertz(player_attack(4)),
-    assertz(player_defense(2)),
-    assertz(player_gold(1)),
+    assertz(player_attack(20)),
+    assertz(player_defense(0)),
+    assertz(player_gold(10000)),
 
     ['enemy.pl'],
     retractall(enemy_level(_)),
@@ -27,8 +27,13 @@ start :-
     ['battle.pl'],
     ['inventory.pl'],
     retractall(special_attack_available),
+    retractall(is_battle),
     ['help.pl'],
-    ['status.pl'].
+    ['status.pl'],
+    ['map.pl'],
+    ['quest.pl'],
+    ['home.pl'],
+    ['shop.pl'].
     /*
     write('░██████╗░███████╗███╗░░██╗░██████╗██╗░░██╗██╗███╗░░██╗  ░██████╗███████╗██╗░░██╗░█████╗░██╗'),nl,
     write('██╔════╝░██╔════╝████╗░██║██╔════╝██║░░██║██║████╗░██║  ██╔════╝██╔════╝██║░██╔╝██╔══██╗██║'),nl,
@@ -56,3 +61,4 @@ start :-
     write('   Are you able to level yourself up and achieve completion of all quests to be able to defeat the creature '),nl,
     write('and earn yourself a place in Sinyalisisville ?'),nl.
     */
+    

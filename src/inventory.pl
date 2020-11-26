@@ -1,6 +1,7 @@
 /* File : inventory.pl */
 /* Inventory system dari player */
 
+/*
 % Testing Purposes
 :- dynamic(player_max_health/1).
 :- dynamic(player_attack/1).
@@ -8,7 +9,7 @@
 player_max_health(10).
 player_attack(10).
 player_defense(10).
-
+*/
 
 /* -----[ INVENTORY ] ----- */
 % ----- Equipment Count -----
@@ -51,9 +52,11 @@ equip_count(3).
 :- dynamic(weapon/7).
 :- dynamic(armor/7).
 :- dynamic(accessory/7).
+/*
 weapon(0, 'Wooden Sword', 1, 2, 2, 2, 0).
 armor(0, 'Iron Armor', 1, 5, 5, 5, 0).
 accessory(0, 'Wood Talisman', 1, 3, 3, 3, 0).
+*/
 
 % ----- Commands -----
 % Count Equipment
@@ -320,12 +323,14 @@ unequipAcc :-
 % ----- List -----
 % Details : ID, HEALTH REGAINED
 :- dynamic(potion/2).
+/*
 potion(1, 300).
 potion(1, 300).
 potion(1, 300).
 potion(2, 600).
 potion(2, 600).
 potion(3, 900).
+*/
 
 potion_name(1, 'Small Potion (300 HP)').
 potion_name(2, 'Medium Potion (600 HP)').

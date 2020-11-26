@@ -33,6 +33,7 @@ start_battle(ID) :-
     assertz(enemy_special_attack_available).
     
 attack :-
+    is_battle,
     player_attack(Attack),
     enemy_current_health(EnemyHealth),
     enemy_defense(EnemyDefense),
@@ -43,8 +44,11 @@ attack :-
     assertz(enemy_current_health(NewEnemyHealth)),  
     enemy_turn,
     enemy_reduce_special_attack_cooldown. 
+attack :-
+    write('You are not in battle.'),nl.
 
 special_attack:-
+    is_battle,
     special_attack_available,!,
     player_attack(PlayerAttack),
     NewPlayerAttack is PlayerAttack * 2,
@@ -62,9 +66,13 @@ special_attack:-
     enemy_reduce_special_attack_cooldown.
 
 special_attack:-
+    is_battle,
     special_attack_cooldown(Cooldown),
     write('Special Attack is not Available'),nl,
     write('Will available again in '), write(Cooldown), write(' turn.'),nl.
+
+special_attack :-
+    write('You are not in battle'),nl.
 
 %charge_special_attack membuat special attack available kalau cooldown telah habis
 charge_special_attack:-
@@ -145,6 +153,29 @@ run_succeed(RunChance) :-
     enemy_turn,
     enemy_reduce_special_attack_cooldown.
 
+%enemy_turn kasus enemy berhasil dikalahkan
+enemy_turn :-
+    enemy_current_health(EnemyHealth),
+    enemy_id(ID),
+    enemy(ID, EnemyName),
+    EnemyHealth =< 0,
+    write('You defeat '), write(EnemyName),nl,
+    exp_gained(ExpGained),
+    player_exp(PlayerExp),
+    NewPlayerExp is PlayerExp + ExpGained,
+    write('You gain '), write(ExpGained), write(' EXP'),nl,
+    retractall(player_exp(_)),
+    assertz(player_exp(NewPlayerExp)),
+    retractall(is_battle),
+    quest_progress(M,N,O),
+    retract(quest_progress(M,N,O)),
+    ((ID = 1 -> (NewM is (M+1), NewN is N, NewO is O));
+    (ID = 2 -> (NewO is (O+1), NewM is M, NewN is N));
+    (ID = 3 -> (NewN is (N+1), NewM is M, NewO is O))),
+    assertz(quest_progress(NewM, NewO, NewN)),
+    level_up,nl,
+    check_quest_done.
+
 %enemy_turn kasus enemy bisa special attack
 enemy_turn :-
     enemy_special_attack_available,!,
@@ -164,20 +195,6 @@ enemy_turn :-
     write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
     enemy_attack.
 
-%enemy_turn kasus enemy berhasil dikalahkan
-enemy_turn :-
-    enemy_current_health(EnemyHealth),
-    enemy_id(ID),
-    enemy(ID, EnemyName),
-    EnemyHealth =< 0,
-    write('You defeat '), write(EnemyName),nl,
-    exp_gained(ExpGained),
-    player_exp(PlayerExp),
-    NewPlayerExp is PlayerExp + ExpGained,
-    write('You gain '), write(ExpGained), write(' EXP'),nl,
-    retractall(player_exp(_)),
-    assertz(player_exp(NewPlayerExp)),
-    level_up.
 
 enemy_attack :-
     enemy_id(ID),
@@ -256,6 +273,8 @@ min_value(X,Y,Z) :-
 min_value(X,Y,Z) :-
     X < Y,
     Z is X.
+
+
 
 %attack :-
 

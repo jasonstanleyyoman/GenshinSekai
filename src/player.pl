@@ -8,11 +8,13 @@
 :- dynamic(player_gold/1).
 :- dynamic(player_job/1).
 
-exp_required(1,100).
-exp_required(2,100).
-exp_required(3,100).
-exp_required(4,100).
-exp_required(5,100).
+player_location(1,1).
+
+exp_required(1,10).
+exp_required(2,12).
+exp_required(3,14).
+exp_required(4,18).
+exp_required(5,20).
 exp_required(6,100).
 exp_required(7,100).
 exp_required(9,100).
@@ -31,7 +33,7 @@ level_up :-
     player_exp(CurrentExp),
     exp_required(CurrentLevel, ExpRequired),
     write('EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
-    CurrentExp >= ExpRequired, !, fail,
+    CurrentExp >= ExpRequired, !,
     retractall(player_level(_)),
     NewLevel is CurrentLevel + 1,
     assertz(player_level(NewLevel)),

@@ -1,8 +1,6 @@
-:- dynamic(playerposition/2).
 
 % Fakta
 mapsize(25,25).
-playerposition(1,1).
 
 barrier(1,5).
 barrier(1,14).
@@ -131,11 +129,13 @@ barrier(22,19).
 barrier(22,20).
 barrier(22,21).
 
+shop(2,2).
 shop(7,1).
 shop(9,1).
 shop(18,12).
 
 guild(1,6).
+guild(1,2).
 guild(9,6).
 guild(21,1).
 
@@ -218,7 +218,7 @@ drawfence(I,J) :-
 	\+ guild(I,J),
 	\+ barrier(I,J),
 	\+ boss(I,J),
-	\+ playerposition(I,J),
+	\+ player_location(I,J),
 	write('_ '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -229,7 +229,19 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	player_location(I,J),
 	shop(I,J),
+	write('P '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	shop(I,J),
+	\+ player_location(I,J),
 	write('S '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -240,7 +252,19 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	player_location(I,J),
 	home(I,J),
+	write('P '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	home(I,J),
+	\+ player_location(I,J),
 	write('H '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -251,7 +275,19 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	player_location(I,J),
 	guild(I,J),
+	write('P '),
+	NewJ is J+1,
+	drawfence(I, NewJ).
+
+drawfence(I,J) :-
+	I > 0,
+	I < 24,
+	J > 0,
+	J < 24,
+	guild(I,J),
+	\+ player_location(I,J),
 	write('Q '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -273,6 +309,7 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
+	\+ player_location(I,J),
 	boss(I,J),
 	write('B '),
 	NewJ is J+1,
@@ -284,7 +321,12 @@ drawfence(I,J) :-
 	I < 24,
 	J > 0,
 	J < 24,
-	playerposition(I,J),
+	player_location(I,J),
+	\+ shop(I,J),
+	\+ home(I,J),
+	\+ guild(I,J),
+	\+ barrier(I,J),
+	\+ boss(I,J),
 	write('P '),
 	NewJ is J+1,
 	drawfence(I, NewJ).
@@ -293,52 +335,117 @@ drawmap :-
 	drawfence(0,0).
 
 w :-
-	playerposition(I,J),
+	\+ is_battle,
+	player_location(I,J),
 	NewI is I-1,
 	NewI =\= 0,
-	\+ shop(NewI,J),
-	\+ home(NewI,J),
-	\+ guild(NewI,J),
 	\+ barrier(NewI,J),
-	\+ boss(NewI,J),
-	retract(playerposition(I,J)),
-	assertz(playerposition(NewI,J)).
+	retract(player_location(I,J)),
+	assertz(player_location(NewI,J)),
+	ecounter_enemy.
+w :-
+	is_battle,
+	write('You are battling'),nl.
 
 a :-
-	playerposition(I,J),
+	\+ is_battle,
+	player_location(I,J),
 	NewJ is J-1,
 	NewJ =\= 0,
-	\+ shop(I,NewJ),
-	\+ home(I,NewJ),
-	\+ guild(I,NewJ),
 	\+ barrier(I,NewJ),
-	\+ boss(I,NewJ),
-	retract(playerposition(I,J)),
-	assertz(playerposition(I,NewJ)).
-
+	retract(player_location(I,J)),
+	assertz(player_location(I,NewJ)),
+	ecounter_enemy.
+a :-
+	is_battle,
+	write('You are battling'),nl.
 s :-
-	playerposition(I,J),
+	\+ is_battle,
+	player_location(I,J),
 	NewI is I+1,
 	NewI =\= 24,
-	\+ shop(NewI,J),
-	\+ home(NewI,J),
-	\+ guild(NewI,J),
 	\+ barrier(NewI,J),
-	\+ boss(NewI,J),
-	retract(playerposition(I,J)),
-	assertz(playerposition(NewI,J)).
+	retract(player_location(I,J)),
+	assertz(player_location(NewI,J)),
+	ecounter_enemy.
+s :-
+	is_battle,
+	write('You are battling'),nl.
 
 
 d :-
-	playerposition(I,J),
+	\+ is_battle,
+	player_location(I,J),
 	NewJ is J+1,
 	NewJ =\= 24,
-	\+ shop(I,NewJ),
-	\+ home(I,NewJ),
-	\+ guild(I,NewJ),
 	\+ barrier(I,NewJ),
-	\+ boss(I,NewJ),
-	retract(playerposition(I,J)),
-	assertz(playerposition(I,NewJ)).
+	retract(player_location(I,J)),
+	assertz(player_location(I,NewJ)),
+	ecounter_enemy.
+d :-
+	is_battle,
+	write('You are battling'),nl.
+ecounter_enemy :-
+	player_location(I,J),
+	\+ shop(I,J),
+	\+ home(I,J),
+	\+ guild(I,J),
+	\+ barrier(I,J),
+	\+ boss(I,J),
+	random(1,10, EcounterChance),
+	check_ecounter(EcounterChance, I).
+
+ecounter_enemy :-
+	player_location(I,J),
+	\+ shop(I,J),
+	\+ home(I,J),
+	\+ guild(I,J),
+	\+ barrier(I,J),
+	\+ boss(I,J),
+	random(1,10, EcounterChance),
+	check_ecounter(EcounterChance, I).
+
+ecounter_enemy :-
+	player_location(I,J),
+	\+ shop(I,J),
+	\+ home(I,J),
+	\+ guild(I,J),
+	\+ barrier(I,J),
+	\+ boss(I,J),
+	random(1,10, EcounterChance),
+	check_ecounter(EcounterChance, I).
+
+check_ecounter(Chance, I) :-
+	Chance < 4, !,
+	slime_zone(I),
+	start_battle(1).
+
+check_ecounter(Chance, I) :-
+	Chance < 4, !,
+	wolf_zone(I),
+	start_battle(2).
+
+check_ecounter(Chance, I) :-
+	Chance < 4, !,
+	goblin_zone(I),
+	start_battle(3).
+
+check_ecounter(_, _) :-
+	write('Hahaha beruntung anda tidak menemukan musuh.'),nl.
+
+
+interact :-
+	player_location(I,J),
+	home(I,J),
+	restore_full_health.
+
+interact :-
+	player_location(I,J),
+	guild(I,J),
+	take_quest.
+interact :-
+	player_location(I,J),
+	shop(I,J),
+	enter_shop.
 
 % interact :-
