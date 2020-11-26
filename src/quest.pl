@@ -7,16 +7,16 @@
 current_quest_id(0).
 
 % ID,GOLD,EXP
-reward(1,500,10).
-reward(2,600,20).
-reward(3,650,25).
-reward(4,700,30).
-reward(5,800,40).
-reward(6,800,45).
-reward(7,900,55).
-reward(8,950,70).
-reward(9,980,80).
-reward(10,1000,90).
+reward(1,500,4).
+reward(2,600,5).
+reward(3,650,6).
+reward(4,700,7).
+reward(5,800,8).
+reward(6,800,9).
+reward(7,900,10).
+reward(8,950,11).
+reward(9,980,12).
+reward(10,1000,13).
 
 % ID, NAME, SLIME, GOBLIN, WOLF
 quest(1, 'Getting Started', 2,0,0).
@@ -37,6 +37,7 @@ take_quest :-
     assertz(is_taking_quest),
     current_quest_id(I),
     NewI is I+1,
+    I<11,
     retract(current_quest_id(I)),
     assertz(current_quest_id(NewI)),
     assertz(quest_progress(0,0,0)).
@@ -76,6 +77,16 @@ check_quest_done :-
     A >= K,
     B >= L,
     C >= M,
+    write('Congratulations! Your quest is done! Rewards have been sent to your inventory!'),nl,
     retract(is_taking_quest),
-    retractall(quest_progress(_,_,_)).
-    % ngasih reward sesuai ID
+    retractall(quest_progress(_,_,_)),
+    player_gold(PG),
+    player_exp(PExp),
+    retractall(player_gold(_)),
+    retractall(player_exp(_)),
+    reward(I,Gold,Exp),
+    NewPG is (Gold + PG),
+    NewExp is (PExp + Exp),
+    assertz(player_gold(NewPG)),
+    assertz(player_exp(NewExp)).
+    

@@ -173,7 +173,8 @@ enemy_turn :-
     (ID = 2 -> (NewO is (O+1), NewM is M, NewN is N));
     (ID = 3 -> (NewN is (N+1), NewM is M, NewO is O))),
     assertz(quest_progress(NewM, NewO, NewN)),
-    level_up.
+    level_up,nl,
+    check_quest_done.
 
 %enemy_turn kasus enemy bisa special attack
 enemy_turn :-
