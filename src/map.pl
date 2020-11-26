@@ -416,17 +416,17 @@ ecounter_enemy :-
 	check_ecounter(EcounterChance, I).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < 4, 
 	slime_zone(I),
 	start_battle(1).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < 4, 
 	wolf_zone(I),
 	start_battle(2).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < 4, 
 	goblin_zone(I),
 	start_battle(3).
 
@@ -446,6 +446,15 @@ interact :-
 interact :-
 	player_location(I,J),
 	shop(I,J),
-	enter_shop.
+	shop.
+
+teleport(X,Y) :-
+	\+ barrier(X,Y),
+	X>0,
+	Y>0,
+	X<24,
+	Y<24,
+	retractall(player_location(_,_)),
+	assertz(player_location(X,Y)).
 
 % interact :-
