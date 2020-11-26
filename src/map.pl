@@ -443,6 +443,7 @@ interact :-
 	player_location(I,J),
 	guild(I,J),
 	take_quest.
+
 interact :-
 	player_location(I,J),
 	shop(I,J),
