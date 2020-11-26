@@ -30,7 +30,45 @@ start_battle(ID) :-
     assertz(enemy_attack(Attack)),
     assertz(enemy_defense(Defense)),
     assertz(special_attack_available),
-    assertz(enemy_special_attack_available).
+    assertz(enemy_special_attack_available),
+    (( ID = 1 -> (
+        write('          ██████████          '),nl,
+        write('      ████░░░░░░░░░░████      '),nl,
+        write('    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██    '),nl,
+        write('  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██  '),nl,
+        write('  ██▒▒▒▒██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒██  '),nl,
+        write('██▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒██'),nl,
+        write('██▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒██'),nl,
+        write('██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██'),nl,
+        write('██▒▒▒▒▒▒▒▒██▒▒▒▒▒▒██▒▒▒▒▒▒▒▒██'),nl,
+        write('██▓▓▒▒▒▒▒▒▒▒██████▒▒▒▒▒▒▒▒▓▓██'),nl,
+        write('  ██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██  '),nl,
+        write('    ██████████████████████    '),nl);
+       ID = 2 -> (
+        write('            ▒▒              ▒▒                               '),nl,
+        write('            ▒▒░░▒▒▒▒      ▒▒▒▒░░▒▒                           '),nl,
+        write('        ▒▒░░  ░░░░▒▒▒▒▒▒░░░░  ░░▒▒                           '),nl,
+        write('        ░░      ░░                ▒▒░░                       '),nl,
+        write('        ▒▒░░    ░░░░░░░░░░    ░░▒▒                           '),nl,
+        write('        ▒▒░░  ░░░░░░░░░░░░░░  ░░▒▒                           '),nl,
+        write('            ▒▒░░░░  ░░░░░░  ░░░░▒▒                           '),nl,
+        write('        ░░      ░░      ░░        ▒▒░░░░                     '),nl,
+        write('        ░░                        ▒▒░░    ██      ██         '),nl,
+        write('        ░░                      ▒▒░░░░                       '),nl,
+        write('        ▒▒░░      ██████      ░░▒▒    ▒▒░░  ▒▒               '),nl,
+        write('            ▒▒░░      ██      ░░▒▒    ▒▒░░░░▒▒               '),nl,
+        write('        ▒▒░░▒▒░░          ░░▒▒░░▒▒▒▒░░░░░░▒▒                 '),nl,
+        write('        ░░                      ▒▒░░                         '),nl,
+        write('        ▒▒░░                ░░░░░░░░░░░░▒▒                   '),nl,
+        write('        ▒▒░░░░            ░░░░▒▒░░░░░░░░▒▒                   '),nl,
+        write('        ▒▒░░░░▒▒      ▒▒  ░░░░▒▒░░░░░░░░▒▒                   '),nl,
+        write('        ▒▒░░░░▒▒      ▒▒  ░░░░▒▒  ░░░░░░▒▒                   '),nl,
+        write('        ░░              ░░      ▒▒░░    ▒▒                   '),nl,
+        write('        ▒▒      ▒▒          ▒▒  ▒▒  ▒▒                       '),nl,
+        write('        ▒▒  ▒▒  ▒▒  ▒▒  ▒▒  ▒▒▒▒▒▒▒▒▒▒                       '),nl,
+        write('        ▒▒▒▒▒▒▒▒    ▒▒▒▒▒▒▒▒                                 '),nl)
+        )).
+
     
 attack :-
     is_battle,
