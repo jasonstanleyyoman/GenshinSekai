@@ -144,6 +144,7 @@ run :-
 run_succeed(RunChance) :-
     RunChance >= 1,
     RunChance =< 7,
+    retractall(is_battle),
     write('You run away successfully'),nl.
 
 run_succeed(RunChance) :-

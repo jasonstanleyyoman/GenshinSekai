@@ -416,17 +416,17 @@ ecounter_enemy :-
 	check_ecounter(EcounterChance, I).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < 4,
 	slime_zone(I),
 	start_battle(1).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < 4,
 	wolf_zone(I),
 	start_battle(2).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, !,
+	Chance < 4,
 	goblin_zone(I),
 	start_battle(3).
 
@@ -447,5 +447,8 @@ interact :-
 	player_location(I,J),
 	shop(I,J),
 	enter_shop.
+
+interact :-
+	write('You are not in special location'),nl.
 
 % interact :-
