@@ -82,7 +82,7 @@ check_job :-
     write('Your job is : '),
     write(J).
 
-godmode :-
+whosyourdaddy :-
     retractall(player_max_health(_)),
     retractall(player_current_health(_)),
     retractall(player_attack(_)),
@@ -91,3 +91,7 @@ godmode :-
     assertz(player_current_health(1000000)),
     assertz(player_attack(1000000)),
     assertz(player_defense(1000000)).
+
+greedisgold :-
+    retractall(player_gold(_)),
+    assertz(player_gold(1000000)).
