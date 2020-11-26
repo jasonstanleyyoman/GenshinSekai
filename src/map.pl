@@ -335,6 +335,7 @@ drawmap :-
 	drawfence(0,0).
 
 w :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewI is I-1,
@@ -348,6 +349,7 @@ w :-
 	write('You are battling'),nl.
 
 a :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewJ is J-1,
@@ -360,6 +362,7 @@ a :-
 	is_battle,
 	write('You are battling'),nl.
 s :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewI is I+1,
@@ -374,6 +377,7 @@ s :-
 
 
 d :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewJ is J+1,
@@ -385,26 +389,6 @@ d :-
 d :-
 	is_battle,
 	write('You are battling'),nl.
-ecounter_enemy :-
-	player_location(I,J),
-	\+ shop(I,J),
-	\+ home(I,J),
-	\+ guild(I,J),
-	\+ barrier(I,J),
-	\+ boss(I,J),
-	random(1,10, EcounterChance),
-	check_ecounter(EcounterChance, I).
-
-ecounter_enemy :-
-	player_location(I,J),
-	\+ shop(I,J),
-	\+ home(I,J),
-	\+ guild(I,J),
-	\+ barrier(I,J),
-	\+ boss(I,J),
-	random(1,10, EcounterChance),
-	check_ecounter(EcounterChance, I).
-
 ecounter_enemy :-
 	player_location(I,J),
 	\+ shop(I,J),
@@ -446,9 +430,22 @@ interact :-
 interact :-
 	player_location(I,J),
 	shop(I,J),
-	enter_shop.
+	shop.
 
 interact :-
 	write('You are not in special location'),nl.
+	
+teleport(X,Y) :-
+	\+ barrier(X,Y),
+	X>0,
+	Y>0,
+	X<24,
+	Y<24,
+	retractall(player_location(_,_)),
+	assertz(player_location(X,Y)).
+
+quit :-
+	write('You decided to leave the game'),nl,
+	halt.
 
 % interact :-
