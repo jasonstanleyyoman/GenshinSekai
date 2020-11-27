@@ -278,8 +278,11 @@ smallPotion :-
             asserta(player_gold(CurrentGold)).
 
 mediumPotion :-
-    player_gold(PlayerGold),
-    PlayerGold < 400 ->
+    inventory_count(Inv), 
+    Inv == 100 ->
+        write('Your inventory is full. Try to remove or use your potions.'), nl
+    ; player_gold(PlayerGold),
+        PlayerGold < 400 ->
         write('You don\'t have enough gold.'), nl, shop
     ;   potion_count(2, Count),
         UpdatedCount is Count + 1,
@@ -294,8 +297,11 @@ mediumPotion :-
         asserta(player_gold(CurrentGold)).
 
 largePotion :-
-    player_gold(PlayerGold),
-    PlayerGold < 600 ->
+    inventory_count(Inv), 
+    Inv == 100 ->
+        write('Your inventory is full. Try to remove or use your potions.'), nl
+    ; player_gold(PlayerGold),
+        PlayerGold < 600 ->
         write('You don\'t have enough gold.'), nl, shop
     ;   potion_count(3, Count),
         UpdatedCount is Count + 1,
