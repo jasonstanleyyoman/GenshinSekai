@@ -257,9 +257,10 @@ smallPotion :-
     player_gold(PlayerGold),
     PlayerGold < 200 ->
         write('You don\'t have enough gold.'), nl, shop
-    ;   asserta(potion(1, 300)),
-        player_gold(PlayerGold),
-        CurrentGold is PlayerGold - 200,
+    ;   potion_count(1, Count),
+        UpdatedCount is Count + 1,
+        retract(potion_count(_, _)),
+        asserta(potion(1, UpdatedCount)),
 
         write('You bought a Small Potion (300 HP).'), nl,
         retract(player_gold(_)),
@@ -269,9 +270,10 @@ mediumPotion :-
     player_gold(PlayerGold),
     PlayerGold < 400 ->
         write('You don\'t have enough gold.'), nl, shop
-    ;   asserta(potion(2, 600)),
-        player_gold(PlayerGold),
-        CurrentGold is PlayerGold - 400,
+    ;   potion_count(2, Count),
+        UpdatedCount is Count + 1,
+        retract(potion_count(_, _)),
+        asserta(potion(2, UpdatedCount)),
 
         write('You bought a Medium Potion (600 HP).'), nl,
         retract(player_gold(_)),
@@ -281,7 +283,11 @@ largePotion :-
     player_gold(PlayerGold),
     PlayerGold < 600 ->
         write('You don\'t have enough gold.'), nl, shop
-    ;   asserta(potion(3, 900)),
+    ;   potion_count(3, Count),
+        UpdatedCount is Count + 1,
+        retract(potion_count(_, _)),
+        asserta(potion(3, UpdatedCount)),
+
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 600,
 

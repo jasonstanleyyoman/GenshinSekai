@@ -16,7 +16,7 @@ player_defense(10).
 :- dynamic(inventory_count/1).
 inventory_count(0).
 update_inventory:-
-    update_pot,
+    %update_pot,
     potion_count(1, A),
     potion_count(2, B),
     potion_count(3, C),
