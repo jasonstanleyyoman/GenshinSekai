@@ -37,7 +37,7 @@ level_up :-
     player_level(CurrentLevel),
     player_exp(CurrentExp),
     exp_required(CurrentLevel, ExpRequired),
-    write('EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
+    write('Current EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
     CurrentExp >= ExpRequired,
     retractall(player_level(_)),
     NewLevel is CurrentLevel + 1,
@@ -57,6 +57,7 @@ level_up :-
     write('Congratulation you ascend to Level '), write(NewLevel),nl,
     level_up.
 
+level_up.
 
 pick_job :-
     \+ player_job(_),
@@ -71,9 +72,9 @@ pick_job :-
     (( JobPick = 1 -> assertz(player_job(1));
        JobPick = 2 -> assertz(player_job(2));
        JobPick = 3 -> assertz(player_job(3)))),
-    ((Job = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(3)));
-    (Job = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(2)));
-    (Job = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(1)))).
+    ((JobPick = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(3)));
+    (JobPick = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(2)));
+    (JobPick = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(1)))).
 
 check_job :-
     player_job(I),
