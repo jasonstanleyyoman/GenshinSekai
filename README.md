@@ -11,12 +11,16 @@ Bisa melalui [link ini](http://www.gprolog.org/#download) (Windows saja) atau me
 
 ### Cara Menggunakan
 Clone Repository
-`` https://github.com/jasonstanleyyoman/GenshinSekai.git ``
+``` 
+https://github.com/jasonstanleyyoman/GenshinSekai.git 
+```
 Cara menjalankan Game :
 1. Buka **GNU Prolog Compiler** 
 2. Tekan File > Consult
 3. Buka file berikut
-``` ...\GenshinSekai\src\main.pl ```
+``` 
+...\GenshinSekai\src\main.pl 
+```
 4. Masukkan command `start.` (dengan titik) untuk memulai game
 5. Gunakan command `help.` apabila memerlukan bantuan di dalam game
 *Catatan : Apabila menemui pertanyaan seperti `true?` langsung tekan enter tanpa mengetik apapun. Game akan berjalan dengan normal.*
