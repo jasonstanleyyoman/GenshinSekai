@@ -39,10 +39,6 @@ Cara membuka file :\
 ```
 swipl -s main.pl
 ```
-atau bisa memuka SWI-Prolog dahulu dengan command `swipl` kemudian masukkan
-```
-[main]
-```
 \
 Setelah file berhasil dibuka, lanjutkan dengan tahapan berikut.
 1. Masukkan command `start.` (dengan titik) untuk memulai game
