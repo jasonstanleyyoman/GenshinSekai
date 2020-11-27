@@ -5,24 +5,48 @@
 The year is 3092. Humanity has survived through countless trials. Nuclear wars, reactor blasts, exposure to radioactive components have caused all the lifeforms on earth to mutate into something else. Octopi that couldn't adapt itself to the situation had learnt to live with a developed slimy skin. Their anatomy resembles fully of a slime. Because of the look, people named them slimes, just like their physical look. Some humans who were exposed to too much radiation had died of severe health condition. Some who were able to survive developed a longer and sharper ears, their height decreased, and their skin turned green. They were given the name goblins because of their physical look. Wolves didn\'t evolve much, but they became much more aggressive.
 
 ### Spesifikasi Lingkungan
-Untuk menjalankan game, harus men-*install* **GNU Prolog**.
-Bisa melalui [link ini](http://www.gprolog.org/#download) (Windows saja) atau melalui [website resmi GNU Prolog](http://www.gprolog.org/#download). 
+**Melalui GNU Prolog Compiler**
+Lakukan install GNU Prolog compiler. Untuk download file installer, bisa melalui [link ini](http://www.gprolog.org/#download) (Windows saja) atau melalui [website resmi GNU Prolog](http://www.gprolog.org/#download). 
 
+**Melalui Terminal Linux**
+1. Buka terminal
+2. Tambahkan ppa:swi-prolog/stable ke dalam sistem dengan command berikut
+```
+sudo add-apt-repository ppa:swi-prolog/stable
+sudo apt-get update
+```
+3. Lakukan install SWI-Prolog dengan command berikut
+```
+sudo apt-get install swi-prolog
+```
 
 ### Cara Menggunakan
 Clone Repository
 ``` 
 https://github.com/jasonstanleyyoman/GenshinSekai.git 
 ```
-Cara menjalankan Game :
-1. Buka **GNU Prolog Compiler** 
+Cara membuka file :
+**Melalui GNU Prolog Compiler**
+1. Buka GNU Prolog Compile
 2. Tekan File > Consult
 3. Buka file berikut
 ``` 
 ...\GenshinSekai\src\main.pl 
 ```
-4. Masukkan command `start.` (dengan titik) untuk memulai game
-5. Gunakan command `help.` apabila memerlukan bantuan di dalam game\
+**Melalui Terminal Linux**
+1. Open directory folder repository yang sudah di clone
+2. Masukkan command berikut untuk menjalankan program
+```
+swipl -s main.pl
+```
+atau bisa memuka SWI-Prolog dahulu dengan command `swipl` kemudian masukkan
+```
+[main]
+```
+
+Setelah file berhasil dibuka, lanjutkan dengan tahapan berikut.
+1. Masukkan command `start.` (dengan titik) untuk memulai game
+2. Gunakan command `help.` apabila memerlukan bantuan di dalam game\
 *Catatan : Apabila menemui pertanyaan seperti `true?` langsung tekan enter tanpa mengetik apapun. Game akan berjalan dengan normal.*
 
 ### Credits
