@@ -25,7 +25,7 @@ Clone Repository
 ``` 
 https://github.com/jasonstanleyyoman/GenshinSekai.git 
 ```
-Cara membuka file :\
+Cara membuka file :
 **Melalui GNU Prolog Compiler**
 1. Buka GNU Prolog Compile
 2. Tekan File > Consult...
