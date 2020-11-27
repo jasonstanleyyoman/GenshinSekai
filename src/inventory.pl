@@ -84,17 +84,17 @@ print_equip :-
     print_weapon(Weapon), print_armor(Armor), print_acc(Acc).
 
 print_weapon(2) :- !.
-print_weapon(Status) :-
+print_weapon(_) :-
    weapon(_, Name, _, _, _, _, _),
    write('1 '), write(Name), nl.
 
 print_armor(2) :- !.
-print_armor(Status) :-
+print_armor(_) :-
    armor(_, Name, _, _, _, _, _),
    write('1 '), write(Name), nl.
 
 print_acc(2) :- !.
-print_acc(Status) :-
+print_acc(_) :-
    accessory(_, Name, _, _, _, _, _),
    write('1 '), write(Name), nl.
 
@@ -361,7 +361,7 @@ print_potion :-
     print_potion(Count, PotName),
     PotionID = 3.
 
-print_potion(0, PotName):- !.
+print_potion(0, _):- !.
 print_potion(Count, PotName) :-
     write(Count), write(' '), write(PotName), nl.
 

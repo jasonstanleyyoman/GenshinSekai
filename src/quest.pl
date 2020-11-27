@@ -3,7 +3,7 @@
 :- dynamic(current_quest/3).
 :- dynamic(quest_progress/3).
 :- dynamic(current_quest_id/1).
-quest_progress(_,_,_).
+
 
 current_quest_id(0).
 
@@ -43,6 +43,9 @@ take_quest :-
     assertz(current_quest_id(NewI)),
     assertz(quest_progress(0,0,0)).
 
+take_quest :-
+    write('Already taking quest'),nl.
+
 check_quest :-
     is_taking_quest,
     current_quest_id(I),
@@ -51,6 +54,9 @@ check_quest :-
     write('Slime : '),write(K),nl,
     write('Goblin : '),write(L),nl,
     write('Wolf : '),write(M),nl.
+
+check_quest :-
+    write('You are not taking quest'),nl.
 
 add_quest_progress_slime :-
     quest_progress(A,B,C),
@@ -90,6 +96,7 @@ check_quest_done :-
     NewPG is (Gold + PG),
     NewExp is (PExp + Exp),
     assertz(player_gold(NewPG)),
-    assertz(player_exp(NewExp)).
+    assertz(player_exp(NewExp)),
+    level_up.
 
 check_quest_done.

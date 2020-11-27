@@ -21,6 +21,7 @@ exp_required(4,10).
 exp_required(5,11).
 exp_required(6,15).
 exp_required(7,19).
+exp_required(8,20).
 exp_required(9,24).
 exp_required(10,30).
 exp_required(11,34).
@@ -53,14 +54,10 @@ level_up :-
     NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
     assertz(player_current_health(NewPlayerCurrentHealth)),
     set_enemy_level,
-    write('Congratulation you ascend to Level '), write(NewLevel),nl.
+    write('Congratulation you ascend to Level '), write(NewLevel),nl,
+    level_up.
 
-level_up :-
-    player_level(CurrentLevel),
-    player_exp(CurrentExp),
-    exp_required(CurrentLevel, ExpRequired),
-    ExpLeft is ExpRequired - CurrentExp,
-    write('You need '), write(ExpLeft), write(' EXP more to level up.'), nl.
+level_up.
 
 pick_job :-
     \+ player_job(_),
@@ -82,7 +79,7 @@ check_job :-
     write('Your job is : '),
     write(J).
 
-godmode :-
+whosyourdaddy :-
     retractall(player_max_health(_)),
     retractall(player_current_health(_)),
     retractall(player_attack(_)),
@@ -91,3 +88,7 @@ godmode :-
     assertz(player_current_health(1000000)),
     assertz(player_attack(1000000)),
     assertz(player_defense(1000000)).
+
+greedisgold :-
+    retractall(player_gold(_)),
+    assertz(player_gold(1000000)).
