@@ -14,30 +14,31 @@ joblist(3, 'Tukang ngutuk').
 
 player_location(1,1).
 
-exp_required(1,10).
-exp_required(2,12).
-exp_required(3,14).
-exp_required(4,18).
-exp_required(5,20).
-exp_required(6,100).
-exp_required(7,100).
-exp_required(9,100).
-exp_required(10,100).
-exp_required(11,100).
-exp_required(12,100).
-exp_required(13,100).
-exp_required(14,100).
-exp_required(15,100).
-exp_required(16,100).
-exp_required(17,100).
-exp_required(18,100).
+exp_required(1,4).
+exp_required(2,6).
+exp_required(3,7).
+exp_required(4,10).
+exp_required(5,11).
+exp_required(6,15).
+exp_required(7,19).
+exp_required(8,20).
+exp_required(9,24).
+exp_required(10,30).
+exp_required(11,34).
+exp_required(12,40).
+exp_required(13,50).
+exp_required(14,60).
+exp_required(15,65).
+exp_required(16,78).
+exp_required(17,80).
+exp_required(18,88).
 
 level_up :-
     player_level(CurrentLevel),
     player_exp(CurrentExp),
     exp_required(CurrentLevel, ExpRequired),
     write('EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
-    CurrentExp >= ExpRequired, !,
+    CurrentExp >= ExpRequired,
     retractall(player_level(_)),
     NewLevel is CurrentLevel + 1,
     assertz(player_level(NewLevel)),
@@ -53,14 +54,9 @@ level_up :-
     NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
     assertz(player_current_health(NewPlayerCurrentHealth)),
     set_enemy_level,
-    write('Congratulation you ascend to Level '), write(NewLevel),nl.
+    write('Congratulation you ascend to Level '), write(NewLevel),nl,
+    level_up.
 
-level_up :-
-    player_level(CurrentLevel),
-    player_exp(CurrentExp),
-    exp_required(CurrentLevel, ExpRequired),
-    ExpLeft is ExpRequired - CurrentExp,
-    write('You need '), write(ExpLeft), write(' EXP more to level up.'), nl.
 
 pick_job :-
     \+ player_job(_),
@@ -74,7 +70,10 @@ pick_job :-
     read(JobPick),
     (( JobPick = 1 -> assertz(player_job(1));
        JobPick = 2 -> assertz(player_job(2));
-       JobPick = 3 -> assertz(player_job(3)))).
+       JobPick = 3 -> assertz(player_job(3)))),
+    ((Job = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(20)));
+    (Job = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(17)));
+    (Job = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(15)))).
 
 check_job :-
     player_job(I),
@@ -101,16 +100,16 @@ starter_pack :-
     player_job(JobID),
     ((JobID = 1 ->
         asserta(weapon(0, 'Wooden Sword', 1, 0, 10, 0, 0)),
-        asserta(armor(0, 'Basic Iron Armor', 1, 20, 0, 35, 0)),
-        asserta(accessory(0, 'Wood Talisman', 1, 5, 5, 5));
+        asserta(armor(0, 'Basic Iron Armor', 1, 0, 0, 15, 0)),
+        asserta(accessory(0, 'Wood Talisman', 1, 25, 0, 0, 0));
     JobID = 2 -> 
-        asserta(weapon(0, 'Basic Bow', 2, 0, 10, 0, 0)),
-        asserta(armor(0, 'Basic Leather Armor', 2, 10, 0, 20, 0)),
-        asserta(accessory(0, 'Robin\'s Hope', 1, 10, 10, 0, 0));
+        asserta(weapon(0, 'Basic Bow', 2, 0, 12, 0, 0)),
+        asserta(armor(0, 'Basic Leather Armor', 2, 0, 0, 12, 0)),
+        asserta(accessory(0, 'Robin\'s Hope', 2, 25, 0, 0, 0));
     JobID = 3 ->
-        asserta(weapon(0, 'Old Staff', 3, 0, 10, 0, 0)),
+        asserta(weapon(0, 'Old Staff', 3, 0, 15, 0, 0)),
         asserta(armor(0, 'Old Robe', 3, 0, 0, 10, 0)),
-        asserta(accessory(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5, 0))
+        asserta(accessory(0, 'Drop of Dragon\'s Blood', 3, 25, 0, 0, 0))
         )),
     retractall(potion_count(1,_)),
     assertz(potion_count(1,5)),
@@ -119,8 +118,10 @@ starter_pack :-
     write('Obtained '), write(WeaponName),nl,
     armor(_,ArmorName,_,_,_,_,_),
     write('Obtained '), write(ArmorName),nl,
-    armor(_,AccessoryName,_,_,_,_,_),
+    accessory(_,AccessoryName,_,_,_,_,_),
     write('Obtained '), write(AccessoryName),nl,
     potion_name(1,PotionName),
     write('Obtained '), write(PotionName),nl.
+
+
 

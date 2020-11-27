@@ -346,6 +346,7 @@ drawmap :-
 	drawfence(0,0).
 
 w :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewI is I-1,
@@ -359,6 +360,7 @@ w :-
 	write('You are battling'),nl.
 
 a :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewJ is J-1,
@@ -382,6 +384,7 @@ a :-
 	is_battle,
 	write('You are battling'),nl.
 s :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewI is I+1,
@@ -396,6 +399,7 @@ s :-
 
 
 d :-
+	\+ game_win,
 	\+ is_battle,
 	player_location(I,J),
 	NewJ is J+1,
@@ -417,38 +421,18 @@ ecounter_enemy :-
 	random(1,10, EcounterChance),
 	check_ecounter(EcounterChance, I).
 
-ecounter_enemy :-
-	player_location(I,J),
-	\+ shop(I,J),
-	\+ home(I,J),
-	\+ guild(I,J),
-	\+ barrier(I,J),
-	\+ boss(I,J),
-	random(1,10, EcounterChance),
-	check_ecounter(EcounterChance, I).
-
-ecounter_enemy :-
-	player_location(I,J),
-	\+ shop(I,J),
-	\+ home(I,J),
-	\+ guild(I,J),
-	\+ barrier(I,J),
-	\+ boss(I,J),
-	random(1,10, EcounterChance),
-	check_ecounter(EcounterChance, I).
-
 check_ecounter(Chance, I) :-
-	Chance < 4, 
+	Chance < 4,
 	slime_zone(I),
 	start_battle(1).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, 
+	Chance < 4,
 	wolf_zone(I),
 	start_battle(2).
 
 check_ecounter(Chance, I) :-
-	Chance < 4, 
+	Chance < 4,
 	goblin_zone(I),
 	start_battle(3).
 
@@ -471,6 +455,9 @@ interact :-
 	shop(I,J),
 	shop.
 
+interact :-
+	write('You are not in special location'),nl.
+	
 teleport(X,Y) :-
 	\+ barrier(X,Y),
 	X>0,
@@ -479,5 +466,7 @@ teleport(X,Y) :-
 	Y<24,
 	retractall(player_location(_,_)),
 	assertz(player_location(X,Y)).
+
+
 
 % interact :-

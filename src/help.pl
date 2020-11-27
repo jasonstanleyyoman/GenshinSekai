@@ -1,4 +1,7 @@
+%help untuk saat di field (exploration)
 help :-
+    \+ is_battle,
+    \+ is_boss_battle,
     write('BASIC COMMANDS'),nl,
     write('--------------------------------------------------------------------'),nl,
     write('1. start         : Untuk memulai petualanganmu'),nl,
@@ -20,3 +23,18 @@ help :-
     write('4. restore_full_health       : Menambah darah menjadi penuh'),nl,
     write('5. teleport(X,Y)             : Teleport player ke point X,Y'),nl,
     write('6. godmode                   : Memberikan attack dan defense senilai 1000000'),nl.
+
+help :- 
+    is_battle ; is_boss_battle,
+
+help :-
+    shop    
+
+help :- 
+    quest
+
+help :- 
+    home
+
+help :-
+    inventory
