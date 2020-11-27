@@ -478,8 +478,7 @@ check_ecounter(Chance, I) :-
 	start_battle(3).
 
 check_ecounter(_, _) :-
-	write('Hahaha beruntung anda tidak menemukan musuh.'),nl.
-
+	write('Situation clear. No enemy appeared.'),nl.
 
 interact :-
 	player_location(I,J),

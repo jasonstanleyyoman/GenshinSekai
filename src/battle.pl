@@ -21,11 +21,11 @@ start_boss_battle :-
     retractall(enemy_defense(_)),
     retractall(enemy_special_attack_available),
     boss_name(BossName),
-    write('Ketemu '), write(BossName),nl,
     assertz(is_boss_battle),
     boss_max_health(BossMaxHealth),
     assertz(boss_current_health(BossMaxHealth)),
     assertz(special_attack_available),
+    assertz(boss_special_attack_available),
     write('yo`                                                                                                 '),nl,
     write('/dms.                                    `+o-                                                       '),nl,
     write(' smdNds/-`     `.-:/+osyyhhhyyso+/-`       -hNy/.         `                                         '),nl,
@@ -73,7 +73,15 @@ start_boss_battle :-
     write('                    :hNMMm``NMMMMMMMMMMMMMMMMMMMM: hMMMMMMMMMMMMMMMMMNms.                           '),nl,
     write('                      .+y- +MMMMMMMMMMMMMMMMMMMMMd .MMMMMMMMMMMMMNmy+-                              '),nl,
     write('                           /ymNNMMMMMMMMMMMMMMMMMM. hMMMMMNNmhs+:.                                  '),nl,
-    assertz(boss_special_attack_available).
+    write(BossName), write(' appeared'), nl,
+    boss_level(BossLevel),
+    boss_attack(BossAttack),
+    boss_defense(BossDefense),
+    write('Level: '), write(BossLevel), nl,
+    write('Health: '), write(BossMaxHealth), nl,
+    write('Attack: '), write(BossAttack),nl,
+    write('Defense '), write(BossDefense),nl.
+
 
 start_battle(ID) :-
     retractall(is_battle),
@@ -85,7 +93,6 @@ start_battle(ID) :-
     retractall(special_attack_available),
     retractall(enemy_special_attack_available),
     enemy(ID, EnemyType),
-    write('Ketemu '), write(EnemyType),nl,
     enemy_level(EnemyLevel),
     max_health_multiplier(HealthMult),
     attack_multiplier(AttackMult),
@@ -243,7 +250,15 @@ start_battle(ID) :-
         write('  h:`/.:`:/d:+`:..o+`   -:hs: `/MMMMMMMNNNNMMMMMMMMMMMMMMNMMMMMN:/ms`/sm/:.yy`  '),nl,            
         write('  :mdhddoyMNNMmNMyhMmso+oshshyhNMMMMNh/`` `:/oyhdmmmdhyo/.-/oyyds/s/o:+o+.:--`  '),nl,            
         write('    -+osyyyhhhhhddmmmNNNNNmmdyssyso:`                          `+.   `:/        '),nl)
-        )).
+        )),
+        write(EnemyType),write(' appeared'), nl,
+        HealthDisplay is round(Health),
+        AttackDisplay is round(Attack),
+        DefenseDisplay is round(Defense),
+        write('Level: '), write(EnemyLevel), nl,
+        write('Health: '), write(HealthDisplay), nl,
+        write('Attack: '), write(AttackDisplay),nl,
+        write('Defense '), write(DefenseDisplay),nl.
     
 attack :-
     is_battle,!,
@@ -347,14 +362,6 @@ reduce_special_attack_cooldown:-
 %reduce_special_attack_cooldown kasus special attack masih available (tidak memiliki cooldown)
 reduce_special_attack_cooldown.
 
-%potion_list menampilkan list potion, hp gain potion, dan jumlah tiap potion
-potion_list :-
-    between(1,3,PotionID),
-    potion_name(PotionID, PotionName),
-    potion_count(PotionID, PotionCount),
-    write(PotionID), write('. '),write(PotionName),write('Count: '),write(PotionCount),nl,
-    PotionID = 3.
-
 %use_potion menggunakan potion
 use_potion(PotionID) :-
     is_battle,
@@ -441,8 +448,19 @@ use_potion(PotionID) :-
     write('You run out of '), write(PotionName),nl.
 
 run :-
+    is_battle,
     random(1,10, RunChance),
     run_succeed(RunChance).
+
+run :-
+    is_boss_battle,
+    random(1,10, RunChance),
+    run_succeed(RunChance).
+
+run :-
+    \+ is_battle,
+    \+ is_boss_battle,
+    write('You are not in battle.'),nl.
 
 %chance lari dari slime
 run_succeed(RunChance) :-
@@ -822,11 +840,9 @@ check_player_status :-
     PlayerHealth > 0,
     write('Health Remaining : '), write(PlayerHealth),nl.
 
-
 max_value(X,Y,Z) :-
     Y >= X,
     Z is Y.
-
 
 max_value(X,Y,Z) :-
     X > Y,
@@ -840,10 +856,3 @@ min_value(X,Y,Z) :-
     X < Y,
     Z is X.
 
-%attack :-
-
-%special_attack :-
-
-%use_potion :-
-
-%run :-

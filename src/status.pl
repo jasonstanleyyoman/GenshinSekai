@@ -1,5 +1,6 @@
 status :- 
-            player_job(PlayerJob),                
+            player_job(JobID),
+            joblist(JobID,PlayerJob),                
             write('Job: '),write(PlayerJob),nl,
             player_level(PlayerLevel),
             write('Level: '),write(PlayerLevel),nl,

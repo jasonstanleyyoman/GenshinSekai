@@ -92,11 +92,6 @@ pick_job :-
     (Job = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(17)));
     (Job = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(15)))).
 
-check_job :-
-    player_job(I),
-    joblist(I,J),
-    write('Your job is : '),
-    write(J).
 
 whosyourdaddy :-
     retractall(player_max_health(_)),
@@ -132,13 +127,13 @@ starter_pack :-
     assertz(potion_count(1,5)),
     write('To kick start your journey, here is a starter pack:'),nl,
     weapon(_,WeaponName,_,_,_,_,_),
-    write('Obtained '), write(WeaponName),nl,
+    write('Obtained 1 '), write(WeaponName),nl,
     armor(_,ArmorName,_,_,_,_,_),
-    write('Obtained '), write(ArmorName),nl,
+    write('Obtained 1 '), write(ArmorName),nl,
     accessory(_,AccessoryName,_,_,_,_,_),
-    write('Obtained '), write(AccessoryName),nl,
+    write('Obtained 1 '), write(AccessoryName),nl,
     potion_name(1,PotionName),
-    write('Obtained '), write(PotionName),nl.
+    write('Obtained 5 '), write(PotionName),nl.
 
 
 
