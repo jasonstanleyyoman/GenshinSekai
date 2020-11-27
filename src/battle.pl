@@ -243,13 +243,14 @@ start_battle(ID) :-
         )).
     
 attack :-
-    is_battle,
+    is_battle,!,
     player_attack(Attack),
     enemy_current_health(EnemyHealth),
     enemy_defense(EnemyDefense),
     DamageDealt is Attack - EnemyDefense,
-    NewEnemyHealth is (EnemyHealth - DamageDealt),
-    write('You deal '), write(DamageDealt), write(' damage!.'),nl,
+    NewDamageDealt is round(DamageDealt),
+    NewEnemyHealth is (EnemyHealth - NewDamageDealt),
+    write('You deal '), write(NewDamageDealt), write(' damage!.'),nl,
     retractall(enemy_current_health(_)),
     assertz(enemy_current_health(NewEnemyHealth)),  
     enemy_turn,
@@ -281,8 +282,9 @@ special_attack:-
     enemy_current_health(EnemyCurrentHealth),
     enemy_defense(EnemyDefense),
     DamageDealt is NewPlayerAttack - EnemyDefense,
-    NewEnemyCurrentHealth is EnemyCurrentHealth - DamageDealt,
-    write('You deal '), write(DamageDealt), write(' damage with special attack.'), nl,
+    NewDamageDealt is round(DamageDealt),
+    NewEnemyCurrentHealth is EnemyCurrentHealth - NewDamageDealt,
+    write('You deal '), write(NewDamageDealt), write(' damage with special attack.'), nl,
     retractall(special_attack_available),
     retractall(special_attack_cooldown(_)),
     retractall(enemy_current_health(_)),
@@ -477,13 +479,14 @@ enemy_turn :-
     retractall(player_exp(_)),
     assertz(player_exp(NewPlayerExp)),
     retractall(is_battle),
+    level_up,nl,
     quest_progress(M,N,O),
     retract(quest_progress(M,N,O)),
     ((ID = 1 -> (NewM is (M+1), NewN is N, NewO is O));
     (ID = 2 -> (NewO is (O+1), NewM is M, NewN is N));
     (ID = 3 -> (NewN is (N+1), NewM is M, NewO is O))),
     assertz(quest_progress(NewM, NewO, NewN)),
-    level_up,nl,
+    write('SAMPAI SINI'),nl,
     check_quest_done.
 
 %enemy_turn kasus enemy bisa special attack
@@ -514,10 +517,11 @@ enemy_attack :-
     player_defense(PlayerDefense),
     DamageDealt is EnemyAttack - PlayerDefense,
     max_value(DamageDealt, 0, NewDamageDealt),!,
-    PlayerNewHealth is PlayerHealth - NewDamageDealt,
+    NewNewDamageDealt is round(NewDamageDealt),
+    PlayerNewHealth is PlayerHealth - NewNewDamageDealt,
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
-    write(EnemyName), write(' deal '), write(NewDamageDealt), write(' damage to you'),nl,
+    write(EnemyName), write(' deal '), write(NewNewDamageDealt), write(' damage to you'),nl,
     check_player_status,
     reduce_special_attack_cooldown.
 
@@ -527,10 +531,11 @@ enemy_special_attack :-
     enemy_attack(EnemyAttack),
     player_current_health(PlayerHealth),
     player_defense(PlayerDefense),
-    DamageDealt is 2*EnemyAttack - PlayerDefense,
-    max_value(DamageDealt, 0, NewDamageDealt),!,
-    PlayerNewHealth is PlayerHealth - NewDamageDealt,
-    write(EnemyName), write(' deal '), write(NewDamageDealt), write(' damage with special attack to you'),nl,
+    DamageDealt is EnemyAttack - PlayerDefense,
+    max_value(DamageDealt, 0, NewDamageDealt),
+    NewNewDamageDealt is round(NewDamageDealt),
+    PlayerNewHealth is PlayerHealth - NewNewDamageDealt,
+    write(EnemyName), write(' deal '), write(NewNewDamageDealt), write(' damage with special attack to you'),nl,
     retractall(enemy_special_attack_available),
     retractall(enemy_special_attack_cooldown(_)),
     retractall(player_current_health(_)),
@@ -743,8 +748,11 @@ boss_healing_action(_).
 
 check_player_status :-
     player_current_health(PlayerHealth),
-    PlayerHealth =< 0,
-    write('You die'),nl.
+    PlayerHealth =< 0,!,
+    retractall(is_battle),
+    retractall(game_start),
+    write('Die message disini'),nl,
+    halt.
 
 check_player_status :-
     player_current_health(PlayerHealth),
@@ -768,8 +776,6 @@ min_value(X,Y,Z) :-
 min_value(X,Y,Z) :-
     X < Y,
     Z is X.
-
-
 
 %attack :-
 
