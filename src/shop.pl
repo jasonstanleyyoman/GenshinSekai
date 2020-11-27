@@ -64,12 +64,19 @@ shop :-
 
 % ----- Exit Shop -----
 exitShop :-
+    insideShop(IsInsideShop),
+    IsInsideShop,
     write('Thank you for coming to Mondstadt General Goods.'), nl,
     write('Please come again. '), nl,
     write('>---------------------------------------<'), nl, 
     
     retract(insideShop(_)),
     asserta(insideShop(false)).
+
+exitShop :-
+    insideShop(IsInsideShop),
+    \+ IsInsideShop,
+    write('You are already outside the shop.'),nl.
 
 /* -----[ GACHA ] ----- */
 % Job ID :  1 - Swordsman
