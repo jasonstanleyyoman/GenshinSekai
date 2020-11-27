@@ -33,7 +33,8 @@ Cara membuka file :\
 ``` 
 ...\GenshinSekai\src\main.pl 
 ```
-atau 
+atau\
+1. Buka GNU Prolog Compile
 2. Tekan File > Change Dir...
 3. Masuk ke folder repository yang sudah di clone. Kemudian masuk folder src
 4. Jalankan command berikut pada GNU Prolog
