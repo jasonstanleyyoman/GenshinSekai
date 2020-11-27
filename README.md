@@ -5,7 +5,7 @@
 The year is 3092. Humanity has survived through countless trials. Nuclear wars, reactor blasts, exposure to radioactive components have caused all the lifeforms on earth to mutate into something else. Octopi that couldn't adapt itself to the situation had learnt to live with a developed slimy skin. Their anatomy resembles fully of a slime. Because of the look, people named them slimes, just like their physical look. Some humans who were exposed to too much radiation had died of severe health condition. Some who were able to survive developed a longer and sharper ears, their height decreased, and their skin turned green. They were given the name goblins because of their physical look. Wolves didn\'t evolve much, but they became much more aggressive.
 
 ### Spesifikasi Lingkungan
-**Melalui GNU Prolog Compiler**
+**Melalui GNU Prolog Compiler**\
 Lakukan install GNU Prolog compiler. Untuk download file installer, bisa melalui [link ini](http://www.gprolog.org/#download) (Windows saja) atau melalui [website resmi GNU Prolog](http://www.gprolog.org/#download). 
 
 **Melalui Terminal Linux**
