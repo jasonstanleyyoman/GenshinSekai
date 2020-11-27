@@ -98,7 +98,7 @@ greedisgold :-
 
 % Starter Equipment
 starter_pack :-
-player_job(JobID),
+    player_job(JobID),
     ((JobID = 1 ->
         asserta(weapon(0, 'Wooden Sword', 1, 0, 10, 0, 0)),
         asserta(armor(0, 'Basic Iron Armor', 1, 20, 0, 35, 0)),
