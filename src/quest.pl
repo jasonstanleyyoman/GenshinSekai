@@ -32,6 +32,7 @@ quest(9, 'Being a God', 0,2,5).
 quest(10, 'Resin Hell', 0,0,8).
 
 take_quest :-
+    write(is_taking_quest),
     \+ is_taking_quest,
     player_location(X,Y),
     guild(X,Y),
@@ -39,7 +40,7 @@ take_quest :-
     current_quest_id(I),
     NewI is I+1,
     I<11,
-    quest(I, NAME, SLIME, GOBLIN, WOLF),
+    quest(NewI, NAME, SLIME, GOBLIN, WOLF),
     nl,
     write(NAME),nl,
     write('Your quest is to defeat : '),nl,
