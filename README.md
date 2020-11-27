@@ -28,13 +28,20 @@ https://github.com/jasonstanleyyoman/GenshinSekai.git
 Cara membuka file :\
 **Melalui GNU Prolog Compiler**
 1. Buka GNU Prolog Compile
-2. Tekan File > Consult
+2. Tekan File > Consult...
 3. Buka file berikut
 ``` 
 ...\GenshinSekai\src\main.pl 
 ```
+atau 
+2. Tekan File > Change Dir...
+3. Masuk ke folder repository yang sudah di clone. Kemudian masuk folder src
+4. Jalankan command berikut pada GNU Prolog
+```
+consult('main').
+````
 **Melalui Terminal Linux**
-1. Open directory folder repository yang sudah di clone
+1. Open directory folder repository yang sudah di clone. Kemudian masuk folder src
 2. Masukkan command berikut untuk menjalankan program
 ```
 swipl -s main.pl
