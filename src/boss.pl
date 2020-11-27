@@ -2,14 +2,13 @@ boss_name('Dvozak').
 
 :- dynamic(boss_current_health/1).
 
-boss_max_health(100).
+boss_max_health(2500).
 
-boss_level(100).
+boss_level(20).
 
-:- dynamic(boss_attack/1).
-boss_attack(1000000).
+boss_attack(700).
 
-boss_defense(1).
+boss_defense(300).
 
 
 

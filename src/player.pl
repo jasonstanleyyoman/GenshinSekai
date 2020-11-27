@@ -33,11 +33,12 @@ exp_required(16,78).
 exp_required(17,80).
 exp_required(18,88).
 
+
 level_up :-
     player_level(CurrentLevel),
     player_exp(CurrentExp),
     exp_required(CurrentLevel, ExpRequired),
-    write('EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
+    write('Current EXP : '), write(CurrentExp), write('/'), write(ExpRequired),nl,
     CurrentExp >= ExpRequired,
     retractall(player_level(_)),
     NewLevel is CurrentLevel + 1,
@@ -54,12 +55,14 @@ level_up :-
     %grow player attack
     player_attack(CurrentAttack),
     retractall(player_attack(_)),
-    NewPlayerAttack is CurrentAttack * 1.2,
+    AfterGrowAttack is CurrentAttack * 1.2,
+    NewPlayerAttack is round(AfterGrowAttack),
     assertz(player_attack(NewPlayerAttack)),
     %grow player defense 
     player_defense(CurrentDefense),
     retractall(player_defense(_)),
-    NewPlayerDefense is CurrentDefense * 1.2,
+    AfterGrowDefense is CurrentDefense * 1.2,
+    NewPlayerDefense is round(AfterGrowDefense),
     assertz(player_defense(NewPlayerDefense)),
     %restore player current health sejumlah growth max health (tidak langsung restore jadi max health)
     player_current_health(CurrentHealth),
@@ -70,6 +73,7 @@ level_up :-
     write('Congratulation you ascend to Level '), write(NewLevel),nl,
     level_up.
 
+level_up.
 
 pick_job :-
     \+ player_job(_),

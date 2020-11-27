@@ -87,12 +87,15 @@ start_battle(ID) :-
     enemy(ID, EnemyType),
     write('Ketemu '), write(EnemyType),nl,
     enemy_level(EnemyLevel),
-    max_health_multiplier(ID, HealthMult),
-    attack_multiplier(ID, AttackMult),
-    defense_multiplier(ID, DefenseMult),
-    Health is EnemyLevel * HealthMult,
-    Attack is (2 * EnemyLevel) + (EnemyLevel * AttackMult),
-    Defense is (1.5 * EnemyLevel) + (EnemyLevel * DefenseMult),
+    max_health_multiplier(HealthMult),
+    attack_multiplier(AttackMult),
+    defense_multiplier(DefenseMult),
+    enemy_base_max_health(ID, EnemyBaseMaxHealth),
+    enemy_base_attack(ID, EnemyBaseAttack),
+    enemy_base_defense(ID, EnemyBaseDefense),
+    Health is (HealthMult**EnemyLevel) *  EnemyBaseMaxHealth,
+    Attack is (AttackMult**EnemyLevel) * EnemyBaseAttack,
+    Defense is (DefenseMult**EnemyLevel) * EnemyBaseDefense,
     assertz(enemy_id(ID)),
     assertz(is_battle),
     assertz(enemy_current_health(Health)),
@@ -480,14 +483,7 @@ enemy_turn :-
     assertz(player_exp(NewPlayerExp)),
     retractall(is_battle),
     level_up,nl,
-    quest_progress(M,N,O),
-    retract(quest_progress(M,N,O)),
-    ((ID = 1 -> (NewM is (M+1), NewN is N, NewO is O));
-    (ID = 2 -> (NewO is (O+1), NewM is M, NewN is N));
-    (ID = 3 -> (NewN is (N+1), NewM is M, NewO is O))),
-    assertz(quest_progress(NewM, NewO, NewN)),
-    write('SAMPAI SINI'),nl,
-    check_quest_done.
+    add_quest_progress(ID).
 
 %enemy_turn kasus enemy bisa special attack
 enemy_turn :-

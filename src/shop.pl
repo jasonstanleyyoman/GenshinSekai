@@ -6,27 +6,27 @@
 
 
 % Testing Purposes 
-:- dynamic(player_gold/1).
-:- dynamic(potion/2).
-:- dynamic(weapon/7).
-:- dynamic(armor/7).
-:- dynamic(accessory/7).
-:- dynamic(player_max_health/1).
-:- dynamic(player_attack/1).
-:- dynamic(player_defense/1).
-:- dynamic(potion_count/2).
-weapon(0, 'Wooden Sword', 1, 0, 200, 0, 1).
-armor(0, 'Iron Armor', 1, 0, 0, 0, 0).
-accessory(0, 'Wood Talisman', 1, 0, 0, 0, 0).
-player_gold(10000000).
-player_job(2).
-player_max_health(10).
-player_attack(210).
-player_defense(10).
-inventory_count(10).
-potion_count(1, 2).
-potion_count(2, 2).
-potion_count(3, 2).
+% :- dynamic(player_gold/1).
+% :- dynamic(potion/2).
+% :- dynamic(weapon/7).
+% :- dynamic(armor/7).
+% :- dynamic(accessory/7).
+% :- dynamic(player_max_health/1).
+% :- dynamic(player_attack/1).
+% :- dynamic(player_defense/1).
+% :- dynamic(potion_count/2).
+% weapon(0, 'Wooden Sword', 1, 0, 200, 0, 1).
+% armor(0, 'Iron Armor', 1, 0, 0, 0, 0).
+% accessory(0, 'Wood Talisman', 1, 0, 0, 0, 0).
+% player_gold(10000000).
+% player_job(2).
+% player_max_health(10).
+% player_attack(210).
+% player_defense(10).
+% inventory_count(10).
+% potion_count(1, 2).
+% potion_count(2, 2).
+% potion_count(3, 2).
 
 % Utility Command
 update_player_status(0, _, _, _) :- !.
@@ -174,20 +174,20 @@ gacha(JobID) :-
     LootType =:= 1 ->
         % Selecting Item from Stock
         weapon_stock(WeaponStock), length(WeaponStock, Stock), Gacha is Stock+1,
-        random(1, Gacha, NthItem), nth(NthItem, WeaponStock, SelectedItem),
+        random(1, Gacha, NthItem), nth1(NthItem, WeaponStock, SelectedItem),
         % Update Stock Information
         select(SelectedItem, WeaponStock, UpdatedWeaponStock),
-        weapon(ItemID, _, _, H, A, D, Stat), TempList = [ItemID], append(TempList, UpdatedWeaponStock, FinalWeaponStock),
+        weapon(ItemID, _, _, H, A, D, _), TempList = [ItemID], append(TempList, UpdatedWeaponStock, FinalWeaponStock),
         retract(weapon_stock(_)), asserta(weapon_stock(FinalWeaponStock)),
         % Get Item
         weapon_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
         
         % Update Player Status
-        update_player_status(Stat, H, A, D),
+        update_player_status(_, H, A, D),
 
         % Update Player Inventory
         retract(weapon(ItemID, _, _, _, _, _, _)),
-        asserta(weapon(Item, ItemName, JobID, Health, Attack, Defense, 0)),
+        asserta(weapon(_, ItemName, JobID, Health, Attack, Defense, 0)),
 
         write('Congratulations! You got '), write(ItemName), write('.'), nl,
         write('      ----- < Item Details > -----'), nl,
@@ -202,7 +202,7 @@ gacha(JobID) :-
         LootType =:= 2 ->
             % Selecting Item from Stock
             armor_stock(ArmorStock), length(ArmorStock, Stock), Gacha is Stock+1,
-            random(1, Gacha, NthItem), nth(NthItem, ArmorStock, SelectedItem),
+            random(1, Gacha, NthItem), nth1(NthItem, ArmorStock, SelectedItem),
             % Update Stock Information
             select(SelectedItem, ArmorStock, UpdatedArmorStock),
             armor(ItemID, _, _, H, A, D, _), TempList = [ItemID], append(TempList, UpdatedArmorStock, FinalArmorStock),
@@ -211,11 +211,11 @@ gacha(JobID) :-
             armor_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
 
             % Update Player Status
-            update_player_status(Stat, H, A, D),
+            update_player_status(_, H, A, D),
 
             % Update Player Inventory
             retract(armor(ItemID, _, _, _, _, _, _)),
-            asserta(armor(Item, ItemName, JobID, Health, Attack, Defense, 0)),
+            asserta(armor(_, ItemName, JobID, Health, Attack, Defense, 0)),
 
             write('Congratulations! You got '), write(ItemName), write('.'), nl,
             write('      ----- < Item Details > -----'), nl,
@@ -230,7 +230,7 @@ gacha(JobID) :-
     ; player_job(JobID),
         % Selecting Item from Stock
         accessory_stock(AccStock), length(AccStock, Stock), Gacha is Stock+1,
-        random(1, Gacha, NthItem), nth(NthItem, AccStock, SelectedItem),
+        random(1, Gacha, NthItem), nth1(NthItem, AccStock, SelectedItem),
         % Update Stock Information
         select(SelectedItem, AccStock, UpdatedAccStock),
         accessory(ItemID, _, _, H, A, D, _), TempList = [ItemID], append(TempList, UpdatedAccStock, FinalAccStock),
@@ -239,11 +239,11 @@ gacha(JobID) :-
         accessory_loot(SelectedItem, ItemName, JobID, Health, Attack, Defense),
 
        % Update Player Status
-       update_player_status(Stat, H, A, D),
+       update_player_status(_, H, A, D),
 
         % Update Player Inventory
         retract(accessory(ItemID, _, _, _, _, _, _)),
-        asserta(accessory(Item, ItemName, JobID, Health, Attack, Defense, 0)),
+        asserta(accessory(_, ItemName, JobID, Health, Attack, Defense, 0)),
 
         write('Congratulations! You got '), write(ItemName), write('.'), nl,
         write('      ----- < Item Details > -----'), nl,

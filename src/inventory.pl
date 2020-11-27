@@ -325,13 +325,9 @@ unequipAcc :-
 :- dynamic(potion/2).
 
 potion(1, 300).
-/*
-potion(1, 300).
-potion(1, 300).
-potion(2, 600).
 potion(2, 600).
 potion(3, 900).
-*/
+
 
 potion_name(1, 'Small Potion (300 HP)').
 potion_name(2, 'Medium Potion (600 HP)').

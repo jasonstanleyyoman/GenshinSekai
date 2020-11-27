@@ -1,10 +1,13 @@
 
-:- dynamic(game_start/0).
+:- dynamic(game_start/1).
 :- dynamic(game_win/0).
 
+game_start(false).
 start :-
-    \+ game_start,
-    assertz(game_start),
+    game_start(IsGameStarted),
+    \+ IsGameStarted,
+    retractall(game_start(_)),
+    assertz(game_start(true)),
     ['player.pl'],
     ['inventory.pl'],
     ['enemy.pl'],
@@ -25,6 +28,7 @@ start :-
     retractall(player_attack(_)),
     retractall(player_defense(_)),
     retractall(player_gold(_)),
+    retractall(is_taking_quest),
     
     pick_job,
     starter_pack,
@@ -82,5 +86,7 @@ start :-
     write('and earn yourself a place in Sinyalisisville ?'),nl.
 
 start :-
+    game_start(IsGameStarted),
+    IsGameStarted,
     write('The game has been started.'),nl.
     

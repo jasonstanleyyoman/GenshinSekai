@@ -13,17 +13,25 @@ enemy(3, 'Goblin').
 :- dynamic(enemy_attack/1).
 :- dynamic(enemy_defense/1).
 
-max_health_multiplier(1,20).
-max_health_multiplier(2,30).
-max_health_multiplier(3,50).
+%enemy_base     ID, Base Status
+enemy_base_attack(1,30).
+enemy_base_attack(2,50).
+enemy_base_attack(3,70).
 
-attack_multiplier(1,1).
-attack_multiplier(2,1.3).
-attack_multiplier(3,1.6).
+enemy_base_defense(1,7).
+enemy_base_defense(2,17).
+enemy_base_defense(3,25).
 
-defense_multiplier(1,0.8).
-defense_multiplier(2,1).
-defense_multiplier(3,1.2).
+enemy_base_max_health(1,30).
+enemy_base_max_health(2,35).
+enemy_base_max_health(3,40).
+
+
+max_health_multiplier(1.1).
+
+attack_multiplier(1.1).
+
+defense_multiplier(1.1).
 
 %Rules
 %exp_gained, depends on enemy type(different multipliers)

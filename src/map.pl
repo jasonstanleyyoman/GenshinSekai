@@ -346,6 +346,8 @@ drawmap :-
 w :-
 	\+ game_win,
 	\+ is_battle,
+	insideShop(IsInsideShop),
+	\+ IsInsideShop,
 	player_location(I,J),
 	NewI is I-1,
 	NewI =\= 0,
@@ -356,10 +358,16 @@ w :-
 w :-
 	is_battle,
 	write('You are battling'),nl.
+w :-
+	insideShop(IsInsideShop),
+	IsInsideShop,
+	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
 
 a :-
 	\+ game_win,
 	\+ is_battle,
+	insideShop(IsInsideShop),
+	\+ IsInsideShop,
 	player_location(I,J),
 	NewJ is J-1,
 	NewJ =\= 0,
@@ -381,9 +389,17 @@ a :-
 a :-
 	is_battle,
 	write('You are battling'),nl.
+
+a :-
+	insideShop(IsInsideShop),
+	IsInsideShop,
+	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
+
 s :-
 	\+ game_win,
 	\+ is_battle,
+	insideShop(IsInsideShop),
+	\+ IsInsideShop,
 	player_location(I,J),
 	NewI is I+1,
 	NewI =\= 24,
@@ -392,13 +408,20 @@ s :-
 	assertz(player_location(NewI,J)),
 	ecounter_enemy.
 s :-
-	is_battle,
+	is_battle,!,
 	write('You are battling'),nl.
+
+s :-
+	insideShop(IsInsideShop),
+	IsInsideShop,
+	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
 
 
 d :-
 	\+ game_win,
 	\+ is_battle,
+	insideShop(IsInsideShop),
+	\+ IsInsideShop,
 	player_location(I,J),
 	NewJ is J+1,
 	NewJ =\= 24,
@@ -409,15 +432,35 @@ d :-
 d :-
 	is_battle,
 	write('You are battling'),nl.
+d :-
+	insideShop(IsInsideShop),
+	IsInsideShop,
+	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
 ecounter_enemy :-
 	player_location(I,J),
 	\+ shop(I,J),
 	\+ home(I,J),
 	\+ guild(I,J),
 	\+ barrier(I,J),
-	\+ boss(I,J),
+	\+ boss(I,J),!,
 	random(1,10, EcounterChance),
 	check_ecounter(EcounterChance, I).
+
+ecounter_enemy :-
+	player_location(I,J),
+	home(I,J),!,
+	write('You are in home, type interact to enter home'),nl.
+
+ecounter_enemy :-
+	player_location(I,J),
+	shop(I,J),!,
+	write('You are in shop, type interact to enter shop'),nl.
+
+ecounter_enemy :-
+	player_location(I,J),
+	guild(I,J),!,
+	write('You are in guild, type interact to enter guild'),nl.
+
 
 check_ecounter(Chance, I) :-
 	Chance < 4,
