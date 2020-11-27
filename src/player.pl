@@ -87,7 +87,9 @@ pick_job :-
     read(JobPick),
     (( JobPick = 1 -> assertz(player_job(1));
        JobPick = 2 -> assertz(player_job(2));
-       JobPick = 3 -> assertz(player_job(3)))),
+       JobPick = 3 -> assertz(player_job(3));
+       JobPick > 3 -> write('Budayakan membaca :)'),nl,nl, pick_job;
+       JobPick < 1 -> write('Budayakan membaca :)'),nl,nl, pick_job)),
     ((Job = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(20)));
     (Job = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(17)));
     (Job = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(15)))).

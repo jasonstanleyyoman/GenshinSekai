@@ -363,6 +363,17 @@ w :-
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
 
+w :- 
+	player_location(I,J),
+	NewI is I-1,
+	((NewI = 0 -> write('Tabrak tembok.'))).
+
+w :-
+	player_location(I,J),
+	NewI is I-1,
+	barrier(NewI,J),
+	write('Tabrak tembok').
+
 a :-
 	\+ game_win,
 	\+ is_battle,
@@ -377,13 +388,23 @@ a :-
 	assertz(player_location(I,NewJ)),
 	ecounter_enemy.
 
+a :- 
+	player_location(I,J),
+	NewJ is J-1,
+	((NewJ = 0 -> write('Tabrak tembok.'))).
+
+a :-
+	player_location(I,J),
+	NewJ is J-1,
+	barrier(I,NewJ),
+	write('Tabrak tembok').
+
 a :-
 	player_location(I,J),
 	NewJ is J-1,
 	boss(I,NewJ),
 	retractall(player_location(_,_)),
 	assertz(player_location(I,NewJ)),
-	assertz(is_battle),
 	start_boss_battle.
 
 a :-
@@ -416,6 +437,16 @@ s :-
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
 
+s :- 
+	player_location(I,J),
+	NewI is I+1,
+	((NewI = 24 -> write('Tabrak tembok.'))).
+
+s :-
+	player_location(I,J),
+	NewI is I+1,
+	barrier(NewI,J),
+	write('Tabrak tembok').
 
 d :-
 	\+ game_win,
@@ -436,6 +467,18 @@ d :-
 	insideShop(IsInsideShop),
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
+
+d :- 
+	player_location(I,J),
+	NewJ is J+1,
+	((NewJ = 24 -> write('Tabrak tembok.'))).
+
+d :-
+	player_location(I,J),
+	NewJ is J+1,
+	barrier(I,NewJ),
+	write('Tabrak tembok').
+
 ecounter_enemy :-
 	player_location(I,J),
 	\+ shop(I,J),
