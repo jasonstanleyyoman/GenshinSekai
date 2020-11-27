@@ -58,6 +58,10 @@ take_quest :-
     assertz(quest_progress(0,0,0)),
     show_quest(10).
 
+take_quest :-
+    is_taking_quest,
+    write('Already taking quest'),nl.  
+
 show_quest(ID) :-
     quest(ID, NAME, SLIME, GOBLIN, WOLF),
     nl,
@@ -72,10 +76,6 @@ show_quest(ID) :-
     write('1. check_quest               : Untuk menampilkan quest yang sedang berlangsung'),nl,
     write('1. check_quest_progress      : Untuk menampilkan progress quest yang sedang berlangsung'),nl.
 
-
-take_quest :-
-    is_taking_quest,
-    write('Already taking quest'),nl.    
 
 check_quest :-
     is_taking_quest,!,

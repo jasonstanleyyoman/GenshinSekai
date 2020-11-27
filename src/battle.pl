@@ -22,13 +22,20 @@ start_boss_battle :-
     retractall(enemy_defense(_)),
     retractall(enemy_special_attack_available),
     boss_name(BossName),
-    write('Ketemu '), write(BossName),nl,
     assertz(is_boss_battle),
     boss_max_health(BossMaxHealth),
     assertz(boss_current_health(BossMaxHealth)),
     assertz(special_attack_available),
+    assertz(boss_special_attack_available),
     draw_dragon,
-    assertz(boss_special_attack_available).
+    write(BossName), write(' appeared'), nl,
+    boss_level(BossLevel),
+    boss_attack(BossAttack),
+    boss_defense(BossDefense),
+    write('Level: '), write(BossLevel), nl,
+    write('Health: '), write(BossMaxHealth), nl,
+    write('Attack: '), write(BossAttack),nl,
+    write('Defense '), write(BossDefense),nl.
 
 % START BATTLE DENGAN ENEMY (SLIME / GOBLIN / WOLF)
 start_battle(ID) :-
@@ -41,14 +48,16 @@ start_battle(ID) :-
     retractall(special_attack_available),
     retractall(enemy_special_attack_available),
     enemy(ID, EnemyType),
-    write('You found a wild '), write(EnemyType),nl,
     enemy_level(EnemyLevel),
-    max_health_multiplier(ID, HealthMult),
-    attack_multiplier(ID, AttackMult),
-    defense_multiplier(ID, DefenseMult),
-    Health is EnemyLevel * HealthMult,
-    Attack is (2 * EnemyLevel) + (EnemyLevel * AttackMult),
-    Defense is (1.5 * EnemyLevel) + (EnemyLevel * DefenseMult),
+    max_health_multiplier(HealthMult),
+    attack_multiplier(AttackMult),
+    defense_multiplier(DefenseMult),
+    enemy_base_max_health(ID, EnemyBaseMaxHealth),
+    enemy_base_attack(ID, EnemyBaseAttack),
+    enemy_base_defense(ID, EnemyBaseDefense),
+    Health is (HealthMult**EnemyLevel) *  EnemyBaseMaxHealth,
+    Attack is (AttackMult**EnemyLevel) * EnemyBaseAttack,
+    Defense is (DefenseMult**EnemyLevel) * EnemyBaseDefense,
     assertz(enemy_id(ID)),
     assertz(is_battle),
     assertz(enemy_current_health(Health)),
@@ -64,7 +73,15 @@ start_battle(ID) :-
        ID = 2 -> (draw_wolf);
 
        ID = 3 -> (draw_goblin)
-        )).
+        )),
+    write(EnemyType),write(' appeared'), nl,
+    HealthDisplay is round(Health),
+    AttackDisplay is round(Attack),
+    DefenseDisplay is round(Defense),
+    write('Level: '), write(EnemyLevel), nl,
+    write('Health: '), write(HealthDisplay), nl,
+    write('Attack: '), write(AttackDisplay),nl,
+    write('Defense '), write(DefenseDisplay),nl.
     
 attack :-
     is_battle,!,
@@ -173,14 +190,6 @@ reduce_special_attack_cooldown:-
 %reduce_special_attack_cooldown kasus special attack masih available (tidak memiliki cooldown)
 reduce_special_attack_cooldown.
 
-%potion_list menampilkan list potion, hp gain potion, dan jumlah tiap potion
-potion_list :-
-    between(1,3,PotionID),
-    potion_name(PotionID, PotionName),
-    potion_count(PotionID, PotionCount),
-    write(PotionID), write('. '),write(PotionName),write('Count: '),write(PotionCount),nl,
-    PotionID = 3.
-
 %use_potion menggunakan potion
 use_potion(PotionID) :-
     is_battle,
@@ -267,8 +276,19 @@ use_potion(PotionID) :-
     write('You run out of '), write(PotionName),nl.
 
 run :-
+    is_battle,
     random(1,10, RunChance),
     run_succeed(RunChance).
+
+run :-
+    is_boss_battle,
+    random(1,10, RunChance),
+    run_succeed(RunChance).
+
+run :-
+    \+ is_battle,
+    \+ is_boss_battle,
+    write('You are not in battle.'),nl.
 
 %chance lari dari slime
 run_succeed(RunChance) :-
@@ -399,7 +419,7 @@ boss_turn :-
     write('     Well, the answer would remain a mystery as the programmers are too lazy to make a sequel :D. Now shoo!'),nl,
     nl,nl,
     write('Type "quit." and press enter : '),
-    read(X),
+    read(_),
     halt.
 
 %boss_turn 
@@ -540,7 +560,7 @@ check_player_status :-
     write('wasting your time.'),
     nl,nl,
     write('Type "quit." and press enter : '),
-    read(X),
+    read(_),
     halt.
 
 check_player_status :-
@@ -548,11 +568,9 @@ check_player_status :-
     PlayerHealth > 0,
     write('Health Remaining : '), write(PlayerHealth),nl.
 
-
 max_value(X,Y,Z) :-
     Y >= X,
     Z is Y.
-
 
 max_value(X,Y,Z) :-
     X > Y,

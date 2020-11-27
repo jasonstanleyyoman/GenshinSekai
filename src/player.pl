@@ -31,6 +31,7 @@ exp_required(16,78).
 exp_required(17,80).
 exp_required(18,88).
 
+
 level_up :-
     player_level(CurrentLevel),
     player_exp(CurrentExp),
@@ -43,10 +44,25 @@ level_up :-
     retractall(player_exp(_)),
     NewPlayerExp is CurrentExp - ExpRequired,
     assertz(player_exp(NewPlayerExp)),
+    %grow player status
+    %grow player max health
     player_max_health(CurrentMaxHealth),
     retractall(player_max_health(_)),
-    NewPlayerMaxHealth is NewLevel * 100,
+    NewPlayerMaxHealth is CurrentMaxHealth * 1.2,
     assertz(player_max_health(NewPlayerMaxHealth)),
+    %grow player attack
+    player_attack(CurrentAttack),
+    retractall(player_attack(_)),
+    AfterGrowAttack is CurrentAttack * 1.2,
+    NewPlayerAttack is round(AfterGrowAttack),
+    assertz(player_attack(NewPlayerAttack)),
+    %grow player defense 
+    player_defense(CurrentDefense),
+    retractall(player_defense(_)),
+    AfterGrowDefense is CurrentDefense * 1.2,
+    NewPlayerDefense is round(AfterGrowDefense),
+    assertz(player_defense(NewPlayerDefense)),
+    %restore player current health sejumlah growth max health (tidak langsung restore jadi max health)
     player_current_health(CurrentHealth),
     retractall(player_current_health(_)),
     NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
@@ -69,16 +85,13 @@ pick_job :-
     read(JobPick),
     (( JobPick = 1 -> assertz(player_job(1));
        JobPick = 2 -> assertz(player_job(2));
-       JobPick = 3 -> assertz(player_job(3)))),
-    ((JobPick = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(3)));
-    (JobPick = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(2)));
-    (JobPick = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(1)))).
+       JobPick = 3 -> assertz(player_job(3));
+       JobPick > 3 -> write('Budayakan membaca :)'),nl,nl, pick_job;
+       JobPick < 1 -> write('Budayakan membaca :)'),nl,nl, pick_job)),
+    ((JobPick = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(20)));
+    (JobPick = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(17)));
+    (JobPick = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(15)))).
 
-check_job :-
-    player_job(I),
-    joblist(I,J),
-    write('Your job is : '),
-    write(J).
 
 whosyourdaddy :-
     retractall(player_max_health(_)),
@@ -99,17 +112,28 @@ starter_pack :-
     player_job(JobID),
     ((JobID = 1 ->
         asserta(weapon(0, 'Wooden Sword', 1, 0, 10, 0, 0)),
-        asserta(armor(0, 'Basic Iron Armor', 1, 20, 0, 35, 0)),
-        asserta(accessory(0, 'Wood Talisman', 1, 5, 5, 5));
+        asserta(armor(0, 'Basic Iron Armor', 1, 0, 0, 15, 0)),
+        asserta(accessory(0, 'Wood Talisman', 1, 25, 0, 0, 0));
     JobID = 2 -> 
-        asserta(weapon(0, 'Basic Bow', 2, 0, 10, 0, 0)),
-        asserta(armor(0, 'Basic Leather Armor', 2, 10, 0, 20, 0)),
-        asserta(accessory(0, 'Robin\'s Hope', 1, 10, 10, 0, 0));
+        asserta(weapon(0, 'Basic Bow', 2, 0, 12, 0, 0)),
+        asserta(armor(0, 'Basic Leather Armor', 2, 0, 0, 12, 0)),
+        asserta(accessory(0, 'Robin\'s Hope', 2, 25, 0, 0, 0));
     JobID = 3 ->
-        asserta(weapon(0, 'Old Staff', 3, 0, 10, 0, 0)),
+        asserta(weapon(0, 'Old Staff', 3, 0, 15, 0, 0)),
         asserta(armor(0, 'Old Robe', 3, 0, 0, 10, 0)),
-        asserta(accessory(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5, 0))
-        )).
+        asserta(accessory(0, 'Drop of Dragon\'s Blood', 3, 25, 0, 0, 0))
+        )),
+    retractall(potion_count(1,_)),
+    assertz(potion_count(1,5)),
+    write('To kick start your journey, here is a starter pack:'),nl,
+    weapon(_,WeaponName,_,_,_,_,_),
+    write('Obtained 1 '), write(WeaponName),nl,
+    armor(_,ArmorName,_,_,_,_,_),
+    write('Obtained 1 '), write(ArmorName),nl,
+    accessory(_,AccessoryName,_,_,_,_,_),
+    write('Obtained 1 '), write(AccessoryName),nl,
+    potion_name(1,PotionName),
+    write('Obtained 5 '), write(PotionName),nl.
 
 
 

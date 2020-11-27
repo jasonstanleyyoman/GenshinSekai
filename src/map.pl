@@ -367,6 +367,17 @@ w :-
 	is_boss_battle,
 	write('You are fighting the boss.'),nl.
 
+w :- 
+	player_location(I,_),
+	NewI is I-1,
+	((NewI = 0 -> write('Tabrak tembok.'))).
+
+w :-
+	player_location(I,J),
+	NewI is I-1,
+	barrier(NewI,J),
+	write('Tabrak tembok').
+
 a :-
 	\+ game_win,
 	\+ is_battle,
@@ -382,13 +393,23 @@ a :-
 	assertz(player_location(I,NewJ)),
 	ecounter_enemy.
 
+a :- 
+	player_location(_,J),
+	NewJ is J-1,
+	((NewJ = 0 -> write('Tabrak tembok.'))).
+
+a :-
+	player_location(I,J),
+	NewJ is J-1,
+	barrier(I,NewJ),
+	write('Tabrak tembok').
+
 a :-
 	player_location(I,J),
 	NewJ is J-1,
 	boss(I,NewJ),
 	retractall(player_location(_,_)),
 	assertz(player_location(I,NewJ)),
-	assertz(is_battle),
 	start_boss_battle.
 
 a :-
@@ -428,6 +449,16 @@ s :-
 	is_boss_battle,
 	write('You are fighting the boss.'),nl.
 
+s :- 
+	player_location(I,_),
+	NewI is I+1,
+	((NewI = 24 -> write('Tabrak tembok.'))).
+
+s :-
+	player_location(I,J),
+	NewI is I+1,
+	barrier(NewI,J),
+	write('Tabrak tembok').
 
 d :-
 	\+ game_win,
@@ -452,6 +483,18 @@ d :-
 d :-
 	is_boss_battle,
 	write('You are fighting the boss.'),nl.
+
+d :- 
+	player_location(_,J),
+	NewJ is J+1,
+	((NewJ = 24 -> write('Tabrak tembok.'))).
+
+d :-
+	player_location(I,J),
+	NewJ is J+1,
+	barrier(I,NewJ),
+	write('Tabrak tembok').
+
 ecounter_enemy :-
 	player_location(I,J),
 	\+ shop(I,J),
@@ -494,8 +537,7 @@ check_ecounter(Chance, I) :-
 	start_battle(3).
 
 check_ecounter(_, _) :-
-	write('Hahaha beruntung anda tidak menemukan musuh.'),nl.
-
+	write('Situation clear. No enemy appeared.'),nl.
 
 interact :-
 	player_location(I,J),

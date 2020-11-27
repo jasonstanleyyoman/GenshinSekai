@@ -93,53 +93,53 @@ accessory_stock([1, 2, 3]).
 % ----- Weapon -----
 % Swordsman
 weapon_loot(0, 'Wooden Sword', 1, 0, 10, 0).
-weapon_loot(1, 'Dull Blade', 1, 0, 25, 0).
-weapon_loot(2, 'Sacrificial Sword', 1, 0, 100, 0).
-weapon_loot(3, 'Aquila Favonia', 1, 0, 250, 0).
+weapon_loot(1, 'Dull Blade', 1, 0, 20, 0).
+weapon_loot(2, 'Sacrificial Sword', 1, 0, 40, 0).
+weapon_loot(3, 'Aquila Favonia', 1, 0, 50, 0).
 % Archer
-weapon_loot(0, 'Basic Bow', 2, 0, 10, 0).
-weapon_loot(1, 'Hunter\'s Bow', 2, 0, 25, 0).
-weapon_loot(2, 'Blackcliff Warbow', 2, 0, 100, 0).
-weapon_loot(3, 'The Viridescent Hunt', 2, 0, 250, 0).
+weapon_loot(0, 'Basic Bow', 2, 0, 12, 0).
+weapon_loot(1, 'Hunter\'s Bow', 2, 0, 24, 0).
+weapon_loot(2, 'Blackcliff Warbow', 2, 0, 48, 0).
+weapon_loot(3, 'The Viridescent Hunt', 2, 0, 60, 0).
 % Sorcerer
-weapon_loot(0, 'Old Staff', 3, 0, 10, 0).
-weapon_loot(1, 'Pocket Grimoire', 3, 0, 25, 0).
-weapon_loot(2, 'Favonius Codex', 3, 0, 100, 0).
-weapon_loot(3, 'Lost Prayer to the Sacred Winds', 3, 0, 250, 0).
+weapon_loot(0, 'Old Staff', 3, 0, 15, 0).
+weapon_loot(1, 'Pocket Grimoire', 3, 0, 30, 0).
+weapon_loot(2, 'Favonius Codex', 3, 0, 60, 0).
+weapon_loot(3, 'Lost Prayer to the Sacred Winds', 3, 0, 75, 0).
 
 % ----- Armor -----
 % Swordsman
-armor_loot(0, 'Basic Iron Armor', 1, 20, 0, 35).
-armor_loot(1, 'Cuirass of Ending Whispers', 1, 30, 0, 50).
-armor_loot(2, 'War-Forged Tunic of Heroes', 1, 80, 0, 150).
-armor_loot(3, 'Mithril Battleplate', 1, 100, 0, 350).
+armor_loot(0, 'Basic Iron Armor', 1, 0, 0, 15).
+armor_loot(1, 'Cuirass of Ending Whispers', 1, 0, 0, 30).
+armor_loot(2, 'War-Forged Tunic of Heroes', 1, 0, 0, 60).
+armor_loot(3, 'Mithril Battleplate', 1, 0, 0, 75).
 % Archer
-armor_loot(0, 'Basic Leather Armor', 2, 10, 0, 20).
-armor_loot(1, 'Vest of the Falling Sky', 2, 25, 0, 30).
-armor_loot(2, 'Adamantite Chestguard', 2, 80, 0, 150).
-armor_loot(3, 'Slumber Boots', 2, 30, 0, 45).
+armor_loot(0, 'Basic Leather Armor', 2, 0, 0, 12).
+armor_loot(1, 'Vest of the Falling Sky', 2, 0, 0, 24).
+armor_loot(2, 'Adamantite Chestguard', 2, 0, 0, 48).
+armor_loot(3, 'Slumber Boots', 2, 0, 0, 60).
 % Sorcerer
 armor_loot(0, 'Old Robe', 3, 0, 0, 10).
-armor_loot(1, 'Bloodcursed Robes', 3, 15, 0, 20).
-armor_loot(2, 'Vindicator of Darkness', 3, 20, 0, 35).
-armor_loot(3, 'Mourning Dragon Armor', 3, 50, 0, 100).
+armor_loot(1, 'Bloodcursed Robes', 3, 0, 0, 20).
+armor_loot(2, 'Vindicator of Darkness', 3, 0, 0, 40).
+armor_loot(3, 'Mourning Dragon Armor', 3, 0, 0, 50).
 
 % ----- Accessory -----
 % Swordsman
-accessory_loot(0, 'Wood Talisman', 1, 5, 5, 5).
-accessory_loot(1, 'Equinox Fruit', 1, 0, 35, 10).
-accessory_loot(2, 'Hide of Lifeblood', 1, 45, 5, 40).
-accessory_loot(3, 'Mantle of Death', 1, -10, 60, 55).
+accessory_loot(0, 'Wood Talisman', 1, 25, 0, 0).
+accessory_loot(1, 'Equinox Fruit', 1, 100, 0, 0).
+accessory_loot(2, 'Hide of Lifeblood', 1, -50, 0, 0).
+accessory_loot(3, 'Mantle of Death', 1, -75, 0, 0).
 % Archer
-accessory_loot(0, 'Robin\'s Hope', 1, 10, 10, 0).
-accessory_loot(1, 'Key of Rain', 2, 0, 25, 30).
-accessory_loot(2, 'Soul Horn', 2, 0, 60, 5).
-accessory_loot(3, 'Petrifying Cup', 2, -5, 75, 45).
+accessory_loot(0, 'Robin\'s Hope', 2, 25, 0, 0).
+accessory_loot(1, 'Key of Rain', 2, 100, 0, 0).
+accessory_loot(2, 'Soul Horn', 2, -50, 0, 0).
+accessory_loot(3, 'Petrifying Cup', 2, -75, 0, 0).
 % Sorcerer
-accessory_loot(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5).
-accessory_loot(1, 'Mirage Elixir', 3, 10, 25, 0).
-accessory_loot(2, 'Domination Crown', 3, 20, 30, 0).
-accessory_loot(3, 'Shard of Riddles', 3, -10, 80, 30).
+accessory_loot(0, 'Drop of Dragon\'s Blood', 25, 0, 0, 0).
+accessory_loot(1, 'Mirage Elixir', 3, 100, 0, 0).
+accessory_loot(2, 'Domination Crown', 3, -50, 0, 0).
+accessory_loot(3, 'Shard of Riddles', 3, -75, 0, 0).
 
 
 % ----- { COMMANDS } -----
