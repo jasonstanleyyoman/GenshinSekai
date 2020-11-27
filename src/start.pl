@@ -11,6 +11,7 @@ start :-
     retractall(player_gold(_)),
     
     pick_job,
+    starter_pack,
 
     assertz(player_exp(0)),
     assertz(player_location(1,1)),
