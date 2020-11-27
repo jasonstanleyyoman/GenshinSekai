@@ -323,8 +323,9 @@ unequipAcc :-
 % ----- List -----
 % Details : ID, HEALTH REGAINED
 :- dynamic(potion/2).
-/*
+
 potion(1, 300).
+/*
 potion(1, 300).
 potion(1, 300).
 potion(2, 600).

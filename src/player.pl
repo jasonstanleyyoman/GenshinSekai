@@ -111,5 +111,16 @@ starter_pack :-
         asserta(weapon(0, 'Old Staff', 3, 0, 10, 0, 0)),
         asserta(armor(0, 'Old Robe', 3, 0, 0, 10, 0)),
         asserta(accessory(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5, 0))
-        )).
+        )),
+    retractall(potion_count(1,_)),
+    assertz(potion_count(1,5)),
+    write('To kick start your journey, here is a starter pack:'),nl,
+    weapon(_,WeaponName,_,_,_,_,_),
+    write('Obtained '), write(WeaponName),nl,
+    armor(_,ArmorName,_,_,_,_,_),
+    write('Obtained '), write(ArmorName),nl,
+    armor(_,AccessoryName,_,_,_,_,_),
+    write('Obtained '), write(AccessoryName),nl,
+    potion_name(1,PotionName),
+    write('Obtained '), write(PotionName),nl.
 
