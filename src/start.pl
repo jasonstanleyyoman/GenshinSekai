@@ -36,6 +36,7 @@ start :-
     ['quest.pl'],
     ['home.pl'],
     ['shop.pl'],
+    ['boss.pl'],
 
                                                                                                     
     write('                                                         `-`                          '),nl,          
