@@ -129,13 +129,11 @@ barrier(22,19).
 barrier(22,20).
 barrier(22,21).
 
-shop(2,2).
 shop(7,1).
 shop(9,1).
 shop(18,12).
 
 guild(1,6).
-guild(1,2).
 guild(9,6).
 guild(21,1).
 
@@ -473,11 +471,23 @@ interact :-
 
 teleport(X,Y) :-
 	\+ barrier(X,Y),
+	\+ boss(X,Y),
 	X>0,
 	Y>0,
 	X<24,
 	Y<24,
 	retractall(player_location(_,_)),
 	assertz(player_location(X,Y)).
+
+teleport(X,Y) :-
+	\+ barrier(X,Y),
+	boss(X,Y),
+	X>0,
+	Y>0,
+	X<24,
+	Y<24,
+	retractall(player_location(_,_)),
+	assertz(player_location(X,Y)),
+	start_boss_battle.
 
 % interact :-
