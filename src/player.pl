@@ -45,10 +45,23 @@ level_up :-
     retractall(player_exp(_)),
     NewPlayerExp is CurrentExp - ExpRequired,
     assertz(player_exp(NewPlayerExp)),
+    %grow player status
+    %grow player max health
     player_max_health(CurrentMaxHealth),
     retractall(player_max_health(_)),
-    NewPlayerMaxHealth is NewLevel * 100,
+    NewPlayerMaxHealth is CurrentMaxHealth * 1.2,
     assertz(player_max_health(NewPlayerMaxHealth)),
+    %grow player attack
+    player_attack(CurrentAttack),
+    retractall(player_attack(_)),
+    NewPlayerAttack is CurrentAttack * 1.2,
+    assertz(player_attack(NewPlayerAttack)),
+    %grow player defense 
+    player_defense(CurrentDefense),
+    retractall(player_defense(_)),
+    NewPlayerDefense is CurrentDefense * 1.2,
+    assertz(player_defense(NewPlayerDefense)),
+    %restore player current health sejumlah growth max health (tidak langsung restore jadi max health)
     player_current_health(CurrentHealth),
     retractall(player_current_health(_)),
     NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
