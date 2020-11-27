@@ -47,7 +47,7 @@ atau bisa memuka SWI-Prolog dahulu dengan command `swipl` kemudian masukkan
 Setelah file berhasil dibuka, lanjutkan dengan tahapan berikut.
 1. Masukkan command `start.` (dengan titik) untuk memulai game
 2. Gunakan command `help.` apabila memerlukan bantuan di dalam game\
-*Catatan : Apabila menemui pertanyaan seperti `true?` langsung tekan enter tanpa mengetik apapun. Game akan berjalan dengan normal.*
+*Catatan : Apabila menemui pertanyaan seperti `true?`(GNU Prolog Compiler) atau `true `(Terminal Linux) langsung tekan enter tanpa mengetik apapun. Game akan berjalan dengan normal.*
 
 ### Credits
 Created by [@kevinryann](https://github.com/kevinryann), [@Reinaldo16519320](https://github.com/Reinaldo16519320), [@jasonstanleyyoman](https://github.com/jasonstanleyyoman), dan [@salyamevia](https://github.com/salyamevia).
