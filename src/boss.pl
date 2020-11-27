@@ -7,7 +7,7 @@ boss_max_health(100).
 boss_level(100).
 
 :- dynamic(boss_attack/1).
-boss_attack(2).
+boss_attack(1000000).
 
 boss_defense(1).
 
