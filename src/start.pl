@@ -11,6 +11,7 @@ start :-
     retractall(player_gold(_)),
     
     pick_job,
+    starter_pack,
 
     assertz(player_exp(0)),
     assertz(player_location(1,1)),
@@ -32,11 +33,11 @@ start :-
     retractall(is_battle),
     ['help.pl'],
     ['status.pl'],
-    ['map.pl'],
     ['quest.pl'],
     ['home.pl'],
     ['shop.pl'],
     ['boss.pl'],
+    ['quit.pl'],
 
                                                                                                     
     write('                                                         `-`                          '),nl,          

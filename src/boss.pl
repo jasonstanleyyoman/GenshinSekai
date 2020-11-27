@@ -1,4 +1,4 @@
-boss_name('Dvalin').
+boss_name('Dvozak').
 
 :- dynamic(boss_current_health/1).
 

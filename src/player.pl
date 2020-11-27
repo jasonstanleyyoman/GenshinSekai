@@ -82,7 +82,7 @@ check_job :-
     write('Your job is : '),
     write(J).
 
-godmode :-
+whosyourdaddy :-
     retractall(player_max_health(_)),
     retractall(player_current_health(_)),
     retractall(player_attack(_)),
@@ -91,3 +91,25 @@ godmode :-
     assertz(player_current_health(1000000)),
     assertz(player_attack(1000000)),
     assertz(player_defense(1000000)).
+
+greedisgold :-
+    retractall(player_gold(_)),
+    assertz(player_gold(1000000)).
+
+% Starter Equipment
+starter_pack :-
+player_job(JobID),
+    ((JobID = 1 ->
+        asserta(weapon(0, 'Wooden Sword', 1, 0, 10, 0, 0)),
+        asserta(armor(0, 'Basic Iron Armor', 1, 20, 0, 35, 0)),
+        asserta(accessory(0, 'Wood Talisman', 1, 5, 5, 5));
+    JobID = 2 -> 
+        asserta(weapon(0, 'Basic Bow', 2, 0, 10, 0, 0)),
+        asserta(armor(0, 'Basic Leather Armor', 2, 10, 0, 20, 0)),
+        asserta(accessory(0, 'Robin\'s Hope', 1, 10, 10, 0, 0));
+    JobID = 3 ->
+        asserta(weapon(0, 'Old Staff', 3, 0, 10, 0, 0)),
+        asserta(armor(0, 'Old Robe', 3, 0, 0, 10, 0)),
+        asserta(accessory(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5, 0))
+        )).
+
