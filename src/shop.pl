@@ -1,11 +1,10 @@
 /* File : shop.pl */
 /* Gacha dan Buy Potions */
 
-/*
-:- include('inventory.pl').
-:- include('player.pl').
-*/
-/*
+%:- include('inventory.pl').
+%:- include('player.pl').
+
+
 % Testing Purposes 
 :- dynamic(player_gold/1).
 :- dynamic(potion/2).
@@ -15,6 +14,7 @@
 :- dynamic(player_max_health/1).
 :- dynamic(player_attack/1).
 :- dynamic(player_defense/1).
+:- dynamic(potion_count/2).
 weapon(0, 'Wooden Sword', 1, 0, 200, 0, 1).
 armor(0, 'Iron Armor', 1, 0, 0, 0, 0).
 accessory(0, 'Wood Talisman', 1, 0, 0, 0, 0).
@@ -23,7 +23,10 @@ player_job(2).
 player_max_health(10).
 player_attack(210).
 player_defense(10).
-*/
+inventory_count(10).
+potion_count(1, 2).
+potion_count(2, 2).
+potion_count(3, 2).
 
 % Utility Command
 update_player_status(0, _, _, _) :- !.
@@ -256,17 +259,23 @@ gacha(JobID) :-
 /* -----[ POTIONS ] ----- */
 % ----- Equipment Count -----
 smallPotion :-
-    player_gold(PlayerGold),
-    PlayerGold < 200 ->
-        write('You don\'t have enough gold.'), nl, shop
-    ;   potion_count(1, Count),
-        UpdatedCount is Count + 1,
-        retract(potion_count(_, _)),
-        asserta(potion(1, UpdatedCount)),
+    inventory_count(Inv), 
+    Inv == 100 ->
+        write('Your inventory is full. Try to remove or use your potions.'), nl
+    ;   player_gold(PlayerGold),
+        PlayerGold < 200 ->
+            write('You don\'t have enough gold.'), nl, shop
+        ;   potion_count(1, Count),
+            UpdatedCount is Count + 1,
+            retract(potion_count(1, _)),
+            asserta(potion_count(1, UpdatedCount)),
 
-        write('You bought a Small Potion (300 HP).'), nl,
-        retract(player_gold(_)),
-        asserta(player_gold(CurrentGold)).
+            player_gold(PlayerGold),
+            CurrentGold is PlayerGold - 200,
+
+            write('You bought a Small Potion (300 HP).'), nl,
+            retract(player_gold(_)),
+            asserta(player_gold(CurrentGold)).
 
 mediumPotion :-
     player_gold(PlayerGold),
@@ -274,8 +283,11 @@ mediumPotion :-
         write('You don\'t have enough gold.'), nl, shop
     ;   potion_count(2, Count),
         UpdatedCount is Count + 1,
-        retract(potion_count(_, _)),
-        asserta(potion(2, UpdatedCount)),
+        retract(potion_count(2, _)),
+        asserta(potion_count(2, UpdatedCount)),
+
+        player_gold(PlayerGold),
+        CurrentGold is PlayerGold - 400,
 
         write('You bought a Medium Potion (600 HP).'), nl,
         retract(player_gold(_)),
@@ -287,8 +299,8 @@ largePotion :-
         write('You don\'t have enough gold.'), nl, shop
     ;   potion_count(3, Count),
         UpdatedCount is Count + 1,
-        retract(potion_count(_, _)),
-        asserta(potion(3, UpdatedCount)),
+        retract(potion_count(3, _)),
+        asserta(potion_count(3, UpdatedCount)),
 
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 600,
