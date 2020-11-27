@@ -22,7 +22,7 @@ Cara menjalankan Game :
 ...\GenshinSekai\src\main.pl 
 ```
 4. Masukkan command `start.` (dengan titik) untuk memulai game
-5. Gunakan command `help.` apabila memerlukan bantuan di dalam game
+5. Gunakan command `help.` apabila memerlukan bantuan di dalam game\
 *Catatan : Apabila menemui pertanyaan seperti `true?` langsung tekan enter tanpa mengetik apapun. Game akan berjalan dengan normal.*
 
 ### Credits
