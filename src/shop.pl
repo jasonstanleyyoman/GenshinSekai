@@ -144,7 +144,9 @@ accessory_loot(3, 'Shard of Riddles', 3, -75, 0, 0).
 
 % ----- { COMMANDS } -----
 gacha :-
-    player_gold(PlayerGold),
+    insideShop(Bool), Bool == false ->
+        write('You are outside the shop. Go to shop to use this command.'), nl
+    ; player_gold(PlayerGold),
     PlayerGold < 1000 ->
         write('You don\'t have enough gold.'), nl, shop
     ;   player_gold(PlayerGold),
@@ -259,8 +261,10 @@ gacha(JobID) :-
 /* -----[ POTIONS ] ----- */
 % ----- Equipment Count -----
 smallPotion :-
-    inventory_count(Inv), 
-    Inv == 100 ->
+    insideShop(Bool), Bool == false ->
+        write('You are outside the shop. Go to shop to use this command.'), nl
+    ; inventory_count(Inv), 
+    Inv >= 100 ->
         write('Your inventory is full. Try to remove or use your potions.'), nl
     ;   player_gold(PlayerGold),
         PlayerGold < 200 ->
@@ -269,6 +273,7 @@ smallPotion :-
             UpdatedCount is Count + 1,
             retract(potion_count(1, _)),
             asserta(potion_count(1, UpdatedCount)),
+            update_inventory,
 
             player_gold(PlayerGold),
             CurrentGold is PlayerGold - 200,
@@ -278,8 +283,10 @@ smallPotion :-
             asserta(player_gold(CurrentGold)).
 
 mediumPotion :-
-    inventory_count(Inv), 
-    Inv == 100 ->
+    insideShop(Bool), Bool == false ->
+        write('You are outside the shop. Go to shop to use this command.'), nl
+    ; inventory_count(Inv), 
+    Inv >= 100 ->
         write('Your inventory is full. Try to remove or use your potions.'), nl
     ; player_gold(PlayerGold),
         PlayerGold < 400 ->
@@ -288,6 +295,7 @@ mediumPotion :-
         UpdatedCount is Count + 1,
         retract(potion_count(2, _)),
         asserta(potion_count(2, UpdatedCount)),
+        update_inventory,
 
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 400,
@@ -297,8 +305,10 @@ mediumPotion :-
         asserta(player_gold(CurrentGold)).
 
 largePotion :-
-    inventory_count(Inv), 
-    Inv == 100 ->
+    insideShop(Bool), Bool == false ->
+        write('You are outside the shop. Go to shop to use this command.'), nl
+    ; inventory_count(Inv), 
+    Inv >= 100 ->
         write('Your inventory is full. Try to remove or use your potions.'), nl
     ; player_gold(PlayerGold),
         PlayerGold < 600 ->
@@ -307,6 +317,7 @@ largePotion :-
         UpdatedCount is Count + 1,
         retract(potion_count(3, _)),
         asserta(potion_count(3, UpdatedCount)),
+        update_inventory,
 
         player_gold(PlayerGold),
         CurrentGold is PlayerGold - 600,
