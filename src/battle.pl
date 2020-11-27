@@ -105,8 +105,9 @@ attack :-
     boss_defense(BossDefense),
     DamageDealt is Attack - BossDefense,
     max_value(DamageDealt, 0, SafeDamageDealt),
-    NewBossHealth is (BossHealth - SafeDamageDealt),
-    write('You deal '), write(DamageDealt), write(' damage!.'),nl,
+    NewDamageDealt is round(SafeDamageDealt),
+    NewBossHealth is (BossHealth - NewDamageDealt),
+    write('You deal '), write(NewDamageDealt), write(' damage!.'),nl,
     retractall(boss_current_health(_)),
     assertz(boss_current_health(NewBossHealth)),  
     boss_turn,
@@ -202,7 +203,8 @@ use_potion(PotionID) :-
     PlayerCurrentHealth < PlayerMaxHealth,
     PlayerLostHealth is PlayerMaxHealth - PlayerCurrentHealth,
     min_value(PotionHealthGain, PlayerLostHealth, HealthRestored),
-    PlayerNewHealth is PlayerCurrentHealth + HealthRestored,
+    NewHealthRestored is round(HealthRestored),
+    PlayerNewHealth is PlayerCurrentHealth + NewHealthRestored,
     %memulihkan health player
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
@@ -211,7 +213,7 @@ use_potion(PotionID) :-
     retractall(potion_count(PotionID, _)),
     assertz(potion_count(PotionID, NewPotionCount)),
     write('You use '), write(PotionName),nl,
-    write('You restored '), write(HealthRestored), write(' health'),nl,
+    write('You restored '), write(NewHealthRestored), write(' health'),nl,
     enemy_turn,
     enemy_reduce_special_attack_cooldown.
 
@@ -226,7 +228,8 @@ use_potion(PotionID) :-
     PlayerCurrentHealth < PlayerMaxHealth,
     PlayerLostHealth is PlayerMaxHealth - PlayerCurrentHealth,
     min_value(PotionHealthGain, PlayerLostHealth, HealthRestored),
-    PlayerNewHealth is PlayerCurrentHealth + HealthRestored,
+    NewHealthRestored is round(HealthRestored),
+    PlayerNewHealth is PlayerCurrentHealth + NewHealthRestored,
     %memulihkan health player
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
@@ -235,7 +238,7 @@ use_potion(PotionID) :-
     retractall(potion_count(PotionID, _)),
     assertz(potion_count(PotionID, NewPotionCount)),
     write('You use '), write(PotionName),nl,
-    write('You restored '), write(HealthRestored), write(' health'),nl,
+    write('You restored '), write(NewHealthRestored), write(' health'),nl,
     boss_turn,
     boss_reduce_special_attack_cooldown.
 
@@ -252,7 +255,8 @@ use_potion(PotionID) :-
     PlayerCurrentHealth < PlayerMaxHealth,
     PlayerLostHealth is PlayerMaxHealth - PlayerCurrentHealth,
     min_value(PotionHealthGain, PlayerLostHealth, HealthRestored),
-    PlayerNewHealth is PlayerCurrentHealth + HealthRestored,
+    NewHealthRestored is round(HealthRestored),
+    PlayerNewHealth is PlayerCurrentHealth + NewHealthRestored,
     %memulihkan health player
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
@@ -261,7 +265,7 @@ use_potion(PotionID) :-
     retractall(potion_count(PotionID, _)),
     assertz(potion_count(PotionID, NewPotionCount)),
     write('You use '), write(PotionName),nl,
-    write('You restored '), write(HealthRestored), write(' health'),nl.
+    write('You restored '), write(NewHealthRestored), write(' health'),nl.
 
 use_potion(_) :-
     player_current_health(PlayerCurrentHealth),
@@ -319,7 +323,8 @@ enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
     enemy(ID, EnemyName),
-    EnemyHealth =< 0,
+    NewEnemyHealth is round(EnemyHealth),
+    NewEnemyHealth =< 0,
     write('You defeated '), write(EnemyName),nl,
     exp_gained(ExpGained),
     player_exp(PlayerExp),
@@ -337,8 +342,9 @@ enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
     enemy(ID, EnemyName),
-    EnemyHealth > 0,
-    write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
+    NewEnemyHealth is round(EnemyHealth),
+    NewEnemyHealth > 0,
+    write(EnemyName), write(' Hang up with '), write(NewEnemyHealth), write(' health left.'),nl,
     enemy_special_attack.
 
 %enemy_turn kasus enemy tidak bisa special attack
@@ -346,8 +352,9 @@ enemy_turn :-
     enemy_current_health(EnemyHealth),
     enemy_id(ID),
     enemy(ID, EnemyName),
-    EnemyHealth > 0,
-    write(EnemyName), write(' Hang up with '), write(EnemyHealth), write(' health left.'),nl,
+    NewEnemyHealth is round(EnemyHealth),
+    NewEnemyHealth > 0,
+    write(EnemyName), write(' Hang up with '), write(NewEnemyHealth), write(' health left.'),nl,
     enemy_attack.
 
 
@@ -406,7 +413,8 @@ enemy_reduce_special_attack_cooldown.
 %boss_turn kasus boss berhasil dikalahkan
 boss_turn :-
     boss_current_health(BossHealth),
-    BossHealth =< 0,
+    NewBossHealth is round(BossHealth),
+    NewBossHealth =< 0,
     boss_name(BossName),
     write('You defeated '), write(BossName),nl,
     retractall(is_boss_battle),
@@ -426,8 +434,9 @@ boss_turn :-
 boss_turn :-
     boss_current_health(BossHealth),
     boss_name(BossName),
-    BossHealth > 0,
-    write(BossName), write(' Hang up with '), write(BossHealth), write(' health left.'),nl,
+    NewBossHealth is round(BossHealth),
+    NewBossHealth > 0,
+    write(BossName), write(' Hang up with '), write(NewBossHealth), write(' health left.'),nl,
     boss_action.
 
 %boss_action menentukan tindakan boss pada gilirannya
@@ -446,7 +455,8 @@ boss_attack_action(BossAction) :-
     player_current_health(PlayerHealth),
     player_defense(PlayerDefense),
     DamageDealt is BossAttack - PlayerDefense,
-    max_value(DamageDealt, 0, NewDamageDealt),!,
+    max_value(DamageDealt, 0, SafeDamageDealt),
+    NewDamageDealt is round(SafeDamageDealt),
     PlayerNewHealth is PlayerHealth - NewDamageDealt,
     retractall(player_current_health(_)),
     assertz(player_current_health(PlayerNewHealth)),
@@ -465,9 +475,10 @@ boss_special_attack_action(BossAction) :-
     player_current_health(PlayerHealth),
     player_defense(PlayerDefense),
     DamageDealt is 2*BossAttack - PlayerDefense,
-    max_value(DamageDealt, 0, NewDamageDealt),!,
-    PlayerNewHealth is PlayerHealth - NewDamageDealt,
-    write(BossName), write(' deal '), write(NewDamageDealt), write(' damage with special attack to you'),nl,
+    max_value(DamageDealt, 0, NewDamageDealt),
+    NewNewDamageDealt is round(NewDamageDealt),
+    PlayerNewHealth is PlayerHealth - NewNewDamageDealt,
+    write(BossName), write(' deal '), write(NewNewDamageDealt), write(' damage with special attack to you'),nl,
     retractall(boss_special_attack_available),
     retractall(boss_special_attack_cooldown(_)),
     retractall(player_current_health(_)),
@@ -530,10 +541,11 @@ boss_healing_action(BossAction) :-
     BossHealthLoss is MaxHealth - CurrentHealth,
     SkillHealAmount is (1/10*MaxHealth),
     min_value(BossHealthLoss, SkillHealAmount, BossHealAmount),
-    NewBossHealth is (CurrentHealth + BossHealAmount),
+    NewBossHealAmount is round(BossHealAmount),
+    NewBossHealth is (CurrentHealth + NewBossHealAmount),
     retractall(boss_current_health(_)),
     assertz(boss_current_health(NewBossHealth)),
-    write(BossName), write(' heals himself for '), write(BossHealAmount), write(' health.'),nl,
+    write(BossName), write(' heals himself for '), write(NewBossHealAmount), write(' health.'),nl,
     check_player_status,
     reduce_special_attack_cooldown.
 

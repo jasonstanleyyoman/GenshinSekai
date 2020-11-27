@@ -49,7 +49,8 @@ level_up :-
     player_max_health(CurrentMaxHealth),
     retractall(player_max_health(_)),
     NewPlayerMaxHealth is CurrentMaxHealth * 1.2,
-    assertz(player_max_health(NewPlayerMaxHealth)),
+    NewNewPlayerMaxHealth is round(NewPlayerMaxHealth),
+    assertz(player_max_health(NewNewPlayerMaxHealth)),
     %grow player attack
     player_attack(CurrentAttack),
     retractall(player_attack(_)),
@@ -65,7 +66,7 @@ level_up :-
     %restore player current health sejumlah growth max health (tidak langsung restore jadi max health)
     player_current_health(CurrentHealth),
     retractall(player_current_health(_)),
-    NewPlayerCurrentHealth is (NewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
+    NewPlayerCurrentHealth is (NewNewPlayerMaxHealth - CurrentMaxHealth + CurrentHealth),
     assertz(player_current_health(NewPlayerCurrentHealth)),
     set_enemy_level,
     write('Congratulation you ascend to Level '), write(NewLevel),nl,
