@@ -16,7 +16,7 @@ player_defense(10).
 :- dynamic(inventory_count/1).
 inventory_count(0).
 update_inventory:-
-    update_pot,
+    %update_pot,
     potion_count(1, A),
     potion_count(2, B),
     potion_count(3, C),
@@ -379,7 +379,7 @@ removeSmall :-
         write('You don\'t have any Small Potion to remove.')
     ; potion_count(1, Count),
         NewCount is Count - 1,
-        retract(potion(1, _)),
+        %retract(potion(1, _)),
         retract(potion_count(1, _)),
         asserta(potion_count(1, NewCount)),
 
@@ -392,7 +392,7 @@ removeMedium :-
         write('You don\'t have any Medium Potion to remove.')
     ; potion_count(2, Count),
         NewCount is Count - 1,
-        retract(potion(2, _)),
+        %retract(potion(2, _)),
         retract(potion_count(2, _)),
         asserta(potion_count(2, NewCount)),
 
@@ -405,7 +405,7 @@ removeLarge :-
         write('You don\'t have any Large Potion to remove.')
     ; potion_count(3, Count),
         NewCount is Count - 1,
-        retract(potion(3, _)),
+        %retract(potion(3, _)),
         retract(potion_count(3, _)),
         asserta(potion_count(3, NewCount)),
 
