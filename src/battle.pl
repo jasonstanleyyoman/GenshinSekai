@@ -401,6 +401,30 @@ use_potion(PotionID) :-
     boss_turn,
     boss_reduce_special_attack_cooldown.
 
+%use_potion kasus sedang tidak battle
+use_potion(PotionID) :-
+    \+ is_battle,
+    \+ is_boss_battle,
+    potion_count(PotionID, PotionCount),
+    PotionCount > 0,
+    potion(PotionID, PotionHealthGain),
+    potion_name(PotionID, PotionName),
+    player_current_health(PlayerCurrentHealth),
+    player_max_health(PlayerMaxHealth),
+    PlayerCurrentHealth < PlayerMaxHealth,
+    PlayerLostHealth is PlayerMaxHealth - PlayerCurrentHealth,
+    min_value(PotionHealthGain, PlayerLostHealth, HealthRestored),
+    PlayerNewHealth is PlayerCurrentHealth + HealthRestored,
+    %memulihkan health player
+    retractall(player_current_health(_)),
+    assertz(player_current_health(PlayerNewHealth)),
+    %mengurangi jumlah potion karena terpakai
+    NewPotionCount is PotionCount - 1,
+    retractall(potion_count(PotionID, _)),
+    assertz(potion_count(PotionID, NewPotionCount)),
+    write('You use '), write(PotionName),nl,
+    write('You restored '), write(HealthRestored), write(' health'),nl.
+
 use_potion(_) :-
     player_current_health(PlayerCurrentHealth),
     player_max_health(PlayerMaxHealth),
@@ -630,13 +654,14 @@ boss_reduce_special_attack_cooldown.
 boss_gust_action(BossAction) :-
     BossAction >= 12,
     BossAction =< 14,
+    boss_name(BossName),
     random(1,3,PotionID),
     potion_count(PotionID, CurrentPotionCount),
     min_value(1, CurrentPotionCount, PotionLost),
     NewPotionCount is (CurrentPotionCount - PotionLost),
     retract(potion_count(PotionID,_)),
     assertz(potion_count(PotionID,NewPotionCount)),
-    write('Dvalin uses gust'),nl,
+    write(BossName), write(' uses gust'),nl,
     write('Player loses '), write(PotionLost), write(' potion(s)'),nl,
     check_player_status,
     reduce_special_attack_cooldown.
@@ -646,6 +671,7 @@ boss_gust_action(_).
 %boss_healing boss dapat memulihkan healthnya
 boss_healing_action(BossAction) :- 
     BossAction =:= 15,
+    boss_name(BossName),
     boss_current_health(CurrentHealth),
     boss_max_health(MaxHealth),
     CurrentHealth < MaxHealth,
@@ -655,7 +681,7 @@ boss_healing_action(BossAction) :-
     NewBossHealth is (CurrentHealth + BossHealAmount),
     retractall(boss_current_health(_)),
     assertz(boss_current_health(NewBossHealth)),
-    write('Dvalin heals himself for '),
+    write(BossName), write(' heals himself for '),
     write(BossHealAmount),
     write(' health.'),nl,
     check_player_status,

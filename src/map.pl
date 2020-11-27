@@ -467,8 +467,6 @@ teleport(X,Y) :-
 	retractall(player_location(_,_)),
 	assertz(player_location(X,Y)).
 
-quit :-
-	write('You decided to leave the game'),nl,
-	halt.
+
 
 % interact :-

@@ -1,7 +1,10 @@
 /* File : shop.pl */
 /* Gacha dan Buy Potions */
 
-% :- include('inventory.pl').
+/*
+:- include('inventory.pl').
+:- include('player.pl').
+*/
 /*
 % Testing Purposes 
 :- dynamic(player_gold/1).

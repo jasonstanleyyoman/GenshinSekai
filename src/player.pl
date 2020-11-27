@@ -57,7 +57,6 @@ level_up :-
     write('Congratulation you ascend to Level '), write(NewLevel),nl,
     level_up.
 
-level_up.
 
 pick_job :-
     \+ player_job(_),
@@ -71,7 +70,10 @@ pick_job :-
     read(JobPick),
     (( JobPick = 1 -> assertz(player_job(1));
        JobPick = 2 -> assertz(player_job(2));
-       JobPick = 3 -> assertz(player_job(3)))).
+       JobPick = 3 -> assertz(player_job(3)))),
+    ((Job = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(3)));
+    (Job = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(2)));
+    (Job = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(1)))).
 
 check_job :-
     player_job(I),
@@ -92,3 +94,23 @@ whosyourdaddy :-
 greedisgold :-
     retractall(player_gold(_)),
     assertz(player_gold(1000000)).
+
+% Starter Equipment
+starter_pack :-
+    player_job(JobID),
+    ((JobID = 1 ->
+        asserta(weapon(0, 'Wooden Sword', 1, 0, 10, 0, 0)),
+        asserta(armor(0, 'Basic Iron Armor', 1, 20, 0, 35, 0)),
+        asserta(accessory(0, 'Wood Talisman', 1, 5, 5, 5));
+    JobID = 2 -> 
+        asserta(weapon(0, 'Basic Bow', 2, 0, 10, 0, 0)),
+        asserta(armor(0, 'Basic Leather Armor', 2, 10, 0, 20, 0)),
+        asserta(accessory(0, 'Robin\'s Hope', 1, 10, 10, 0, 0));
+    JobID = 3 ->
+        asserta(weapon(0, 'Old Staff', 3, 0, 10, 0, 0)),
+        asserta(armor(0, 'Old Robe', 3, 0, 0, 10, 0)),
+        asserta(accessory(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5, 0))
+        )).
+
+
+
