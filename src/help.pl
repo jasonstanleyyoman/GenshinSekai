@@ -9,9 +9,9 @@ help :-
     write('6. d             : gerak ke ke timur 1 langkah'),nl,
     write('7. a             : gerak ke barat 1 langkah'),nl,
     write('8. help          : menampilkan segala bantuan'),nl,
-    write('9. take_quest    : untuk mengambil quest'),nl,
-    write('10. interact     : untuk berinteraksi dengan komponen map'),nl,
-    write('11. check_job    : untuk mengecek job sekarang'),nl,
+    write('9. interact     : untuk berinteraksi dengan komponen map'),nl,
+    write('10. check_job    : untuk mengecek job sekarang'),nl,
+    write('11. check_quest  : untuk mengecek quest yang sedang aktif'),nl,
     write('---------------------------------------------------------------------'),nl,
     write('CHEAT COMMANDS'),nl,
     write('1. add_quest_progress_slime  : Menambah progress slime pada quest'),nl,
@@ -19,4 +19,5 @@ help :-
     write('3. add_quest_progress_wolf   : Menambah progress wolf pada quest'),nl,
     write('4. restore_full_health       : Menambah darah menjadi penuh'),nl,
     write('5. teleport(X,Y)             : Teleport player ke point X,Y'),nl,
-    write('6. godmode                   : Memberikan attack dan defense senilai 1000000'),nl.
+    write('6. whosyourdaddy             : Mengganti attack dan defense senilai 1000000'),nl,
+    write('7. greedisgold               : Mengganti gold player menjadi 1000000'),nl.
