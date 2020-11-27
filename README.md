@@ -43,7 +43,7 @@ atau bisa memuka SWI-Prolog dahulu dengan command `swipl` kemudian masukkan
 ```
 [main]
 ```
-
+\
 Setelah file berhasil dibuka, lanjutkan dengan tahapan berikut.
 1. Masukkan command `start.` (dengan titik) untuk memulai game
 2. Gunakan command `help.` apabila memerlukan bantuan di dalam game\
