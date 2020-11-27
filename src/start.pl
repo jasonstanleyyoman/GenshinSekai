@@ -1,7 +1,17 @@
 
 start :-
-    %['player.pl'],
-    %['inventory.pl'],
+    ['player.pl'],
+    ['inventory.pl'],
+    ['enemy.pl'],
+    ['help.pl'],
+    ['map.pl'],
+    ['battle.pl'],
+    ['status.pl'],
+    ['quest.pl'],
+    ['home.pl'],
+    ['shop.pl'],
+    ['boss.pl'],
+    ['quit.pl'],
     retractall(player_exp(_)),
     retractall(player_location(_,_)),
     retractall(player_level(_)),
@@ -22,23 +32,11 @@ start :-
     ((Job = 1 -> assertz(player_max_health(100)), assertz(player_current_health(100)), assertz(player_attack(15)), assertz(player_defense(3)));
     (Job = 2 -> assertz(player_max_health(90)), assertz(player_current_health(90)), assertz(player_attack(17)), assertz(player_defense(2)));
     (Job = 3 -> assertz(player_max_health(80)), assertz(player_current_health(80)), assertz(player_attack(20)), assertz(player_defense(1)))),
-
-    %['enemy.pl'],
     retractall(enemy_level(_)),
-
     assertz(enemy_level(1)),
-    %['map.pl'],
-    %['battle.pl'],
-
     retractall(special_attack_available),
     retractall(is_battle),
-    %['help.pl'],
-    %['status.pl'],
-    %['quest.pl'],
-    %['home.pl'],
-    %['shop.pl'],
-    %['boss.pl'],
-    %['quit.pl'],
+
 
                                                                                                     
     write('                                                         `-`                          '),nl,          
