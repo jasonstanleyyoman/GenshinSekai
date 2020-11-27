@@ -12,8 +12,6 @@ joblist(1, 'Tukang tusuk').
 joblist(2, 'Tukang tembak').
 joblist(3, 'Tukang ngutuk').
 
-player_location(1,1).
-
 exp_required(1,4).
 exp_required(2,6).
 exp_required(3,7).

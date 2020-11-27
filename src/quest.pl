@@ -1,11 +1,12 @@
 :- dynamic(is_taking_quest/0).
+
 % SLIME, GOBLIN, WOLF
 :- dynamic(current_quest/3).
 :- dynamic(quest_progress/3).
-:- dynamic(current_quest_id/1).
 quest_progress(0,0,0).
 
-current_quest_id(0).
+:- dynamic(current_quest_id/1).
+current_quest_id(10).
 
 % ID,GOLD,EXP
 reward(1,500,4).
@@ -32,17 +33,35 @@ quest(9, 'Being a God', 0,2,5).
 quest(10, 'Resin Hell', 0,0,8).
 
 take_quest :-
-    write(is_taking_quest),
     \+ is_taking_quest,
     player_location(X,Y),
     guild(X,Y),
-    assertz(is_taking_quest),
     current_quest_id(I),
     NewI is I+1,
-    I<11,
-    quest(NewI, NAME, SLIME, GOBLIN, WOLF),
+    NewI =< 10,!,
+    assertz(is_taking_quest),
+    quest(NewI, _, _, _, _),
+    retract(current_quest_id(I)),
+    assertz(current_quest_id(NewI)),
+    assertz(quest_progress(0,0,0)),
+    
+    show_quest(NewI).
+take_quest :-
+    \+ is_taking_quest,
+    player_location(X,Y),
+    guild(X,Y),
+    current_quest_id(ID),
+    NewID is ID + 1,
+    NewID > 10,!,
+    assertz(is_taking_quest),
+    quest(10, _, _, _, _),
+    assertz(quest_progress(0,0,0)),
+    show_quest(10).
+
+show_quest(ID) :-
+    quest(ID, NAME, SLIME, GOBLIN, WOLF),
     nl,
-    write(NAME),nl,
+    write('Quest name : '),write(NAME),nl,
     write('Your quest is to defeat : '),nl,
     write('Slime     : '),write(SLIME),nl,
     write('Goblin    : '),write(GOBLIN),nl,
@@ -51,23 +70,18 @@ take_quest :-
     nl,
     write('Utility : '),nl,
     write('1. check_quest               : Untuk menampilkan quest yang sedang berlangsung'),nl,
-    write('1. check_quest_progress      : Untuk menampilkan progress quest yang sedang berlangsung'),nl,
-    retract(current_quest_id(I)),
-    assertz(current_quest_id(NewI)),
-    assertz(quest_progress(0,0,0)).
+    write('1. check_quest_progress      : Untuk menampilkan progress quest yang sedang berlangsung'),nl.
+
 
 take_quest :-
     is_taking_quest,
-    write('Already taking quest'),nl.
-
-take_quest :-
-    write('Congratulation, you have finish all quest. Sadly, we have no more quest for you'),nl.
+    write('Already taking quest'),nl.    
 
 check_quest :-
     is_taking_quest,!,
     current_quest_id(I),
     quest(I, J, K, L, M),
-    write(J),nl,
+    write('Quest name : '),write(J),nl,
     write('Slime : '),write(K),nl,
     write('Goblin : '),write(L),nl,
     write('Wolf : '),write(M),nl.

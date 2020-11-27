@@ -10,7 +10,3 @@ boss_level(100).
 boss_attack(1000000).
 
 boss_defense(1).
-
-
-
-

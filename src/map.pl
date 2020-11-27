@@ -346,6 +346,7 @@ drawmap :-
 w :-
 	\+ game_win,
 	\+ is_battle,
+	\+ is_boss_battle,
 	insideShop(IsInsideShop),
 	\+ IsInsideShop,
 	player_location(I,J),
@@ -362,10 +363,14 @@ w :-
 	insideShop(IsInsideShop),
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
+w :-
+	is_boss_battle,
+	write('You are fighting the boss.'),nl.
 
 a :-
 	\+ game_win,
 	\+ is_battle,
+	\+ is_boss_battle,
 	insideShop(IsInsideShop),
 	\+ IsInsideShop,
 	player_location(I,J),
@@ -394,10 +399,14 @@ a :-
 	insideShop(IsInsideShop),
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
+a :-
+	is_boss_battle,
+	write('You are fighting the boss.'),nl.
 
 s :-
 	\+ game_win,
 	\+ is_battle,
+	\+ is_boss_battle,
 	insideShop(IsInsideShop),
 	\+ IsInsideShop,
 	player_location(I,J),
@@ -415,11 +424,15 @@ s :-
 	insideShop(IsInsideShop),
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
+s :-
+	is_boss_battle,
+	write('You are fighting the boss.'),nl.
 
 
 d :-
 	\+ game_win,
 	\+ is_battle,
+	\+ is_boss_battle,
 	insideShop(IsInsideShop),
 	\+ IsInsideShop,
 	player_location(I,J),
@@ -436,6 +449,9 @@ d :-
 	insideShop(IsInsideShop),
 	IsInsideShop,
 	write('You are inside a shop, type exitShop. to exit the shop.'),nl.
+d :-
+	is_boss_battle,
+	write('You are fighting the boss.'),nl.
 ecounter_enemy :-
 	player_location(I,J),
 	\+ shop(I,J),
