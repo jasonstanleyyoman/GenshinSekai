@@ -82,7 +82,7 @@ check_job :-
     write('Your job is : '),
     write(J).
 
-godmode :-
+whosyourdaddy :-
     retractall(player_max_health(_)),
     retractall(player_current_health(_)),
     retractall(player_attack(_)),
@@ -91,6 +91,10 @@ godmode :-
     assertz(player_current_health(1000000)),
     assertz(player_attack(1000000)),
     assertz(player_defense(1000000)).
+
+greedisgold :-
+    retractall(player_gold(_)),
+    assertz(player_gold(1000000)).
 
 % Starter Equipment
 starter_pack :-
@@ -108,3 +112,4 @@ player_job(JobID),
         asserta(armor(0, 'Old Robe', 3, 0, 0, 10, 0)),
         asserta(accessory(0, 'Drop of Dragon\'s Blood', 1, 0, 10, 5, 0))
         )).
+
